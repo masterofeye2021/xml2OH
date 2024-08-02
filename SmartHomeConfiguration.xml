@@ -1,0 +1,211 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!-- Created with Liquid Studio (https://www.liquid-technologies.com) -->
+<Openhab xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="C:\Projekte\xml2OH\XSDFile.xsd">
+    <Lights>
+        <Light name="string" assignment="KUE">
+            <On enable="false" name="string" icon="string" unit="U" format="%.2f">
+                <tags>
+                    <replacerTag>string</replacerTag>
+                </tags>
+                <item.link>
+                    <link>string</link>
+                </item.link>
+            </On>
+            <Off enable="true" name="string" icon="string" unit="U" format="%.1F">
+                <tags>
+                    <replacerTag>string</replacerTag>
+                </tags>
+                <item.link>
+                    <link>string</link>
+                </item.link>
+            </Off>
+        </Light>
+        <Light name="string" assignment="KUE">
+            <On enable="true" name="string" icon="string" unit="%" format="%.2f">
+                <tags>
+                    <replacerTag>string</replacerTag>
+                </tags>
+                <item.link>
+                    <link>string</link>
+                </item.link>
+            </On>
+            <Off enable="true" name="string" icon="string" unit="I" format="%.1f">
+                <tags>
+                    <replacerTag>string</replacerTag>
+                </tags>
+                <item.link>
+                    <link>string</link>
+                </item.link>
+            </Off>
+        </Light>
+        <Light name="string" assignment="HWR">
+            <On enable="1" name="string" icon="string" unit="°C" format="%.1F">
+                <tags>
+                    <replacerTag>string</replacerTag>
+                </tags>
+                <item.link>
+                    <link>string</link>
+                </item.link>
+            </On>
+            <Off enable="true" name="string" icon="string" unit="U" format="%.0f">
+                <tags>
+                    <replacerTag>string</replacerTag>
+                </tags>
+                <item.link>
+                    <link>string</link>
+                </item.link>
+            </Off>
+        </Light>
+    </Lights>
+    <Shutter name="string" direction="string" statusTop="false" statusBottom="false" absolutPosition="2421" assignment="FLUEG">
+        <up enable="1" name="string" icon="string" unit="K" format="%.1F">
+            <tags>
+                <replacerTag>string</replacerTag>
+            </tags>
+            <item.link>
+                <link>string</link>
+            </item.link>
+        </up>
+        <down enable="false" name="string" icon="string" unit="°C" format="%.0f">
+            <tags>
+                <replacerTag>string</replacerTag>
+            </tags>
+            <item.link>
+                <link>string</link>
+            </item.link>
+        </down>
+        <stop enable="true" name="string" icon="string" unit="K" format="%.2f">
+            <tags>
+                <replacerTag>string</replacerTag>
+            </tags>
+            <item.link>
+                <link>string</link>
+            </item.link>
+        </stop>
+    </Shutter>
+    <Shutter name="string" direction="string" statusTop="false" statusBottom="false" absolutPosition="592" assignment="GWC">
+        <up enable="true" name="string" icon="string" unit="%" format="%.0f">
+            <tags>
+                <replacerTag>string</replacerTag>
+            </tags>
+            <item.link>
+                <link>string</link>
+            </item.link>
+        </up>
+        <down enable="true" name="string" icon="string" unit="K" format="%.1f">
+            <tags>
+                <replacerTag>string</replacerTag>
+            </tags>
+            <item.link>
+                <link>string</link>
+            </item.link>
+        </down>
+        <stop enable="false" name="string" icon="string" unit="°C" format="ND">
+            <tags>
+                <replacerTag>string</replacerTag>
+            </tags>
+            <item.link>
+                <link>string</link>
+            </item.link>
+        </stop>
+    </Shutter>
+    <Shutter name="string" direction="string" statusTop="true" statusBottom="true" absolutPosition="-100" assignment="FLUEG">
+        <up enable="true" name="string" icon="string" unit="%" format="%.1F">
+            <tags>
+                <replacerTag>string</replacerTag>
+            </tags>
+            <item.link>
+                <link>string</link>
+            </item.link>
+        </up>
+        <down enable="0" name="string" icon="string" unit="I" format="%.1F">
+            <tags>
+                <replacerTag>string</replacerTag>
+            </tags>
+            <item.link>
+                <link>string</link>
+            </item.link>
+        </down>
+        <stop enable="1" name="string" icon="string" unit="°C" format="%.1f">
+            <tags>
+                <replacerTag>string</replacerTag>
+            </tags>
+            <item.link>
+                <link>string</link>
+            </item.link>
+        </stop>
+    </Shutter>
+    <Sensors sensorType="Feuchtigkeit" assignment="FLUEG">
+        <measurement enable="0" name="string" icon="string" unit="K" format="%.2f">
+            <tags>
+                <replacerTag>string</replacerTag>
+            </tags>
+            <item.link>
+                <link>string</link>
+            </item.link>
+        </measurement>
+    </Sensors>
+    <HomeVentilation assignment="HWR">
+        <ventilation.intensity.read enable="0" name="string" icon="string" unit="%" format="%.1f">
+            <tags>
+                <replacerTag>string</replacerTag>
+            </tags>
+            <item.link>
+                <link>string</link>
+            </item.link>
+        </ventilation.intensity.read>
+        <ventilation.intensity.write enable="false" name="string" icon="string" unit="I" format="%.1f">
+            <tags>
+                <replacerTag>string</replacerTag>
+            </tags>
+            <item.link>
+                <link>string</link>
+            </item.link>
+        </ventilation.intensity.write>
+        <operation.mode.read enable="0">
+            <tags>
+                <replacerTag>string</replacerTag>
+            </tags>
+            <item.link>
+                <link>string</link>
+            </item.link>
+        </operation.mode.read>
+        <operation.mode.write>
+            <tags>
+                <replacerTag>string</replacerTag>
+            </tags>
+            <item.link>
+                <link>string</link>
+            </item.link>
+        </operation.mode.write>
+        <supply.air.temperature>
+            <tags>
+                <replacerTag>string</replacerTag>
+            </tags>
+            <item.link>
+                <link>string</link>
+            </item.link>
+        </supply.air.temperature>
+    </HomeVentilation>
+    <Health.System>
+        <Item.link>
+            <link>string</link>
+        </Item.link>
+        <online>
+            <tags>
+                <replacerTag>string</replacerTag>
+            </tags>
+            <item.link>
+                <link>string</link>
+            </item.link>
+        </online>
+        <last.seen>
+            <tags>
+                <replacerTag>string</replacerTag>
+            </tags>
+            <item.link>
+                <link>string</link>
+            </item.link>
+        </last.seen>
+    </Health.System>
+</Openhab>
