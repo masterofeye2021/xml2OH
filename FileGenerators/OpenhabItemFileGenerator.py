@@ -26,12 +26,12 @@ class OpenhabItemFileGenerator(OpenhabFileGenerator):
 
     def writeRow(self, device : Device, channel : Channel, groups: list[Group]):
         self.writeType(channel)
-        self.writeName(device,channel)
+        name = self.writeName(device,channel)
         self.writeLabel(channel)
         self.writeIcon(channel)
         self.writeGroup(channel,groups)
         self.writeTag(channel)
-        self.writeBindingConfiguration()
+        self.writeBindingConfiguration(name)
         self.file.write("\n")
 
 
@@ -40,10 +40,12 @@ class OpenhabItemFileGenerator(OpenhabFileGenerator):
         self.file.write(" ")
 
     def writeName(self, device : Device, channel : Channel):
-        name = device.device_area.value + "_" +  channel.access.value+ "_" + device.device_function.value + "_" +  channel.name
+        name = device.device_area.value + "_" +  channel.access.value+ "_" + device.device_function.value + "_" + channel.extention + "_" +  channel.name 
+        name = name.replace(" ", "_")
+        name = name.replace("/", "_")
         self.file.write(name)
         self.file.write(" ")
-        pass
+        return name
 
     def writeLabel(self, channel : Channel):
         self.file.write("\"" + channel.label + "\"")
@@ -62,11 +64,13 @@ class OpenhabItemFileGenerator(OpenhabFileGenerator):
         endDelmiter = ")"
         
         self.file.write(startDelimiter)
+        groupString = ""
         for group in channel.groups.group:
             matches = [x for x in groups if x.id == group.refid]
-            if len(matches)> 0:
-                self.file.write(matches.pop().name)
-                self.file.write(",")
+            if len(matches) > 0:
+                groupString += matches[0].name
+                groupString += ","
+        self.file.write(groupString.rstrip(","))
         self.file.write(endDelmiter)
         self.file.write(" ")
 
@@ -75,10 +79,12 @@ class OpenhabItemFileGenerator(OpenhabFileGenerator):
         #self.file.write(" ")
         pass
 
-    def writeBindingConfiguration(self):
+    def writeBindingConfiguration(self, name: str):
         startDel = "{"
-        stopDel = "{"
-        #self.file.write(" ")
+        stopDel = "}"
+        self.file.write(startDel)
+        self.file.write("channel=\"knx:device:bridge:generic:" + name + "\"")
+        self.file.write(stopDel)
         pass
 
     def writeKNXBindingConfiguration(self):

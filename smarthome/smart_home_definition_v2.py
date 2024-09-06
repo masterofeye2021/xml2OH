@@ -71,11 +71,13 @@ class GroupFunction(Enum):
 class Icon(Enum):
     FA_LIGHTBULB = "fa-lightbulb"
     FA_BLINDS = "fa-blinds"
-    FA_RADAR = "fa-radar "
-    FA_TEMPERATURE_THREE_QUARTERS = "fa-temperature-three-quarters "
-    FA_CLOUD = "fa-cloud "
-    FA_DROPLET = "fa-droplet "
-    FA_SIGNAL = "fa-signal "
+    FA_RADAR = "fa-radar"
+    FA_TEMPERATURE_THREE_QUARTERS = "fa-temperature-three-quarters"
+    FA_CLOUD = "fa-cloud"
+    FA_DROPLET = "fa-droplet"
+    FA_SIGNAL = "fa-signal"
+    FA_OCTAGON = "fa-octagon"
+    FA_LOCK = "fa-lock"
 
 
 @dataclass
@@ -446,6 +448,13 @@ class Channel:
         },
     )
     name: Optional[str] = field(
+        default=None,
+        metadata={
+            "type": "Attribute",
+            "required": True,
+        },
+    )
+    extention: Optional[str] = field(
         default=None,
         metadata={
             "type": "Attribute",
