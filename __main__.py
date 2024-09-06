@@ -9,7 +9,7 @@ def main():
     fileGenerator = OpenhabItemFileGenerator(os.path.dirname(__file__))
     parser = XmlParser()
     openhab = parser.parse("SmartHomeConfiguration.xml", Openhab)
-    fileGenerator.writeFile(openhab.devices.device)
+    fileGenerator.writeFile(openhab.devices.device, openhab.groups.group)
     
 
 if __name__ == "__main__":

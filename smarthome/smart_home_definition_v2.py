@@ -138,12 +138,13 @@ class Ping:
 
 
 class TypeValue(Enum):
-    SWITCH = "switch"
-    NUMBER = "number"
-    ROLLERSHUTTER = "rollershutter"
-    CONTACT = "contact"
-    DATETIME = "datetime"
-    STRING = "string"
+    SWITCH = "Switch"
+    NUMBER = "Number"
+    ROLLERSHUTTER = "Rollershutter"
+    CONTACT = "Contact"
+    DATE_TIME = "DateTime"
+    STRING = "String"
+    DIMMER = "Dimmer"
 
 
 class Unit(Enum):
