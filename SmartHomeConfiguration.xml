@@ -3,7 +3,7 @@
 <openhab xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="SmartHomeDefinitionV2.xsd">
 	<devices>
 		<device device.area="WOZ" device.function="SHUTTER" device.comm.type="KNX" device.label="Rollladen Nordfenster" device.name="Rolllanden Nordfenster">
-			<channel format="ND" unit="ND" access="RW" icon="fa-blinds" enable="true" persistence="false" label="Toggle Rollladen Nordfenster" type="Switch" name="Auf/Ab" extention="Nordfenster">
+			<channel format="ND" unit="ND" access="RW" icon="fa-blinds" enable="true" persistence="false" label="Toggle Rollladen Nordfenster" type="Rollershutter" name="Auf/Ab" extention="Nordfenster">
 				<link>String</link>
 				<connection>
 					<knx>
@@ -254,4 +254,8 @@
 		<group label="Nordfenster" icon="fa-blinds" name="Nordfenster" id="Nordfenster"/>
 		<group label="Südfenster" icon="fa-blinds" name="Südfenster" id="Südfenster"/>
 	</groups>
+	<knx.configuration>
+		<bridge type="TUNNEL" ip.address="String" port.number="3671" local.ip="String" reading.pause="50" response.timeout="10" read.retries.limit="3" auto.reconnect.period="60"/>
+		<tunnel address="String" fetch="true" ping.interval="300" read.interval="3600"/>
+	</knx.configuration>
 </openhab>

@@ -1,0 +1,112 @@
+from FileGenerators.OpenhabFileGenerator import OpenhabFileGenerator
+from smarthome import Channel, Device, Comm, Group, KnxConfiguration, TypeValue
+import os
+
+
+
+EXPORTDIRECTORY = "export"
+THINGDIRECTORY = "things"
+THINGFILEKNX = "knx.things"
+
+class OpenhabKNXThingFileGenerator(OpenhabFileGenerator):
+    def __init__(self, file_location : str) -> None:
+        
+        abs_file_path = os.path.join(file_location, EXPORTDIRECTORY+ "\\" + THINGDIRECTORY + "\\" + THINGFILEKNX)
+        self.file = open(abs_file_path, "w+")
+        super().__init__()
+
+
+    def writeBridge(self,knx : KnxConfiguration, devices : list[Device]):
+        self.file.write("Bridge knx:ip:bridge [")
+        self.file.write("\n\t")
+
+        self.file.write("type=\"" + knx.bridge.type_value + "\",")
+        self.file.write("\n\t")
+
+        self.file.write("ipdAddress=\"" + knx.bridge.ip_address+ "\",")
+        self.file.write("\n\t")
+
+        self.file.write("portNumber=" + knx.bridge.port_number+ ",")
+        self.file.write("\n\t")
+
+        self.file.write("localIp=\"" + knx.bridge.local_ip+ "\",")
+        self.file.write("\n\t")
+
+        self.file.write("readingPause=" + str(knx.bridge.reading_pause)+ ",")
+        self.file.write("\n\t")
+
+        self.file.write("responseTimeout=" +  str(knx.bridge.response_timeout)+ ",")
+        self.file.write("\n\t")
+
+        self.file.write("readRetriesLimit=" +  str(knx.bridge.read_retries_limit)+ ",")
+        self.file.write("\n\t")
+
+        self.file.write("autoTeconnectPeriod=" +  str(knx.bridge.read_retries_limit))
+        self.file.write("\n")
+
+        self.file.write("] {")
+        self.file.write("\n\t")
+
+        self.writeThing(knx,devices)
+
+
+    def writeThing(self, knx : KnxConfiguration, devices : list[Device]):
+        self.file.write("Thing device generic [")
+        self.file.write("\n\t\t")
+
+        self.file.write("type=\"" + knx.tunnel.address + "\",")
+        self.file.write("\n\t\t")
+
+        self.file.write("fetch=" + str(knx.tunnel.fetch) + ",")
+        self.file.write("\n\t\t")
+
+        self.file.write("pingInterval=" + str(knx.tunnel.ping_interval)+ ",")
+        self.file.write("\n\t\t")
+
+        self.file.write("readInterval=" + str(knx.tunnel.read_interval))
+        self.file.write("\n\t\t")
+
+        self.file.write("] {")
+        self.file.write("\n\t\t\t")
+
+        self.writeChannel(knx, devices)
+
+    def writeChannel(self, knx : KnxConfiguration, devices : list[Device]):
+
+        for device in devices:
+            if device.device_comm_type == Comm.KNX :
+                for channel in device.channel:
+                    self.writeChannelType(channel.type_value.value)
+                    self.writeChannelName(device,channel)
+                    self.writeChannelLabel(device,channel)
+                    self.writeGroupAddress(channel)
+                    self.file.write("\n\t\t\t")
+        self.file.write("\n\t\t")
+
+    def writeChannelType(self, type : str):
+        self.file.write("Type " + type.lower())
+
+    def writeChannelName(self, device : Device, channel: Channel):
+        name = device.device_area.value + "_" +  channel.access.value+ "_" + device.device_function.value + "_" + channel.extention + "_" +  channel.name 
+        name = name.replace(" ", "_")
+        name = name.replace("/", "_")
+
+        self.file.write("\t : " + name)
+
+
+    def writeChannelLabel(self, device : Device, channel: Channel):
+        self.file.write("\t \"" + channel.name + "\"")
+
+    def writeGroupAddress(self,channel: Channel):
+        if channel.type_value == TypeValue.CONTACT:
+            self.file.write("\t [ ga=\""+ str(channel.connection.knx.add1.main) + "/" + str(channel.connection.knx.add1.middle) +"/"+ str(channel.connection.knx.add1.sub)+"\" ]")
+
+        if channel.type_value == TypeValue.NUMBER:
+            self.file.write("\t [ ga=\""+ str(channel.connection.knx.add1.main) + "/" + str(channel.connection.knx.add1.middle) +"/"+ str(channel.connection.knx.add1.sub)+"\" ]")
+
+        if channel.type_value == TypeValue.ROLLERSHUTTER:
+            self.file.write("\t [ upDown=\""+ str(channel.connection.knx.add1.main) + "/" + str(channel.connection.knx.add1.middle) +"/"+ str(channel.connection.knx.add1.sub)+"\","
+                            "stopMove=\""+ str(channel.connection.knx.add2.main) + "/" + str(channel.connection.knx.add2.middle) +"/"+ str(channel.connection.knx.add2.sub)+"\"," +
+                            "position=\""+ str(channel.connection.knx.add3.main) + "/" + str(channel.connection.knx.add3.middle) +"/"+ str(channel.connection.knx.add3.sub)+"\" ]")
+
+            

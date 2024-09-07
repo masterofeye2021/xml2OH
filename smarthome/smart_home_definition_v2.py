@@ -108,6 +108,115 @@ class KnxAddress:
     )
 
 
+@dataclass
+class KnxConfiguration:
+    class Meta:
+        name = "knx.configuration"
+
+    bridge: Optional["KnxConfiguration.Bridge"] = field(
+        default=None,
+        metadata={
+            "type": "Element",
+            "required": True,
+        },
+    )
+    tunnel: Optional["KnxConfiguration.Tunnel"] = field(
+        default=None,
+        metadata={
+            "type": "Element",
+            "required": True,
+        },
+    )
+
+    @dataclass
+    class Bridge:
+        type_value: str = field(
+            default="TUNNEL",
+            metadata={
+                "name": "type",
+                "type": "Attribute",
+            },
+        )
+        ip_address: Optional[str] = field(
+            default=None,
+            metadata={
+                "name": "ip.address",
+                "type": "Attribute",
+            },
+        )
+        port_number: str = field(
+            default="3671",
+            metadata={
+                "name": "port.number",
+                "type": "Attribute",
+            },
+        )
+        local_ip: Optional[str] = field(
+            default=None,
+            metadata={
+                "name": "local.ip",
+                "type": "Attribute",
+            },
+        )
+        reading_pause: int = field(
+            default=50,
+            metadata={
+                "name": "reading.pause",
+                "type": "Attribute",
+            },
+        )
+        response_timeout: int = field(
+            default=10,
+            metadata={
+                "name": "response.timeout",
+                "type": "Attribute",
+            },
+        )
+        read_retries_limit: int = field(
+            default=3,
+            metadata={
+                "name": "read.retries.limit",
+                "type": "Attribute",
+            },
+        )
+        auto_reconnect_period: int = field(
+            default=60,
+            metadata={
+                "name": "auto.reconnect.period",
+                "type": "Attribute",
+            },
+        )
+
+    @dataclass
+    class Tunnel:
+        address: Optional[str] = field(
+            default=None,
+            metadata={
+                "type": "Attribute",
+            },
+        )
+        fetch: bool = field(
+            default=True,
+            metadata={
+                "type": "Attribute",
+            },
+        )
+        ping_interval: int = field(
+            default=300,
+            metadata={
+                "name": "ping.interval",
+                "type": "Attribute",
+            },
+        )
+        read_interval: int = field(
+            default=3600,
+            metadata={
+                "name": "read.interval",
+                "type": "Attribute",
+            },
+        )
+
+
 class ModbusReadValue(Enum):
     UINT16 = "uint16"
     INT32 = "int32"
@@ -599,6 +708,14 @@ class Openhab:
     groups: Optional[Groups] = field(
         default=None,
         metadata={
+            "type": "Element",
+            "required": True,
+        },
+    )
+    knx_configuration: Optional[KnxConfiguration] = field(
+        default=None,
+        metadata={
+            "name": "knx.configuration",
             "type": "Element",
             "required": True,
         },
