@@ -85,27 +85,83 @@ class KnxAddress:
     class Meta:
         name = "knx.address"
 
-    main: Optional[int] = field(
+    main_ga: Optional["KnxAddress.MainGa"] = field(
         default=None,
         metadata={
+            "name": "main.ga",
             "type": "Element",
             "required": True,
         },
     )
-    middle: Optional[int] = field(
+    listening_ga: Optional["KnxAddress.ListeningGa"] = field(
         default=None,
         metadata={
+            "name": "listening.ga",
             "type": "Element",
-            "required": True,
         },
     )
-    sub: Optional[int] = field(
-        default=None,
-        metadata={
-            "type": "Element",
-            "required": True,
-        },
-    )
+
+    @dataclass
+    class MainGa:
+        main: Optional[int] = field(
+            default=None,
+            metadata={
+                "type": "Element",
+                "required": True,
+            },
+        )
+        middle: Optional[int] = field(
+            default=None,
+            metadata={
+                "type": "Element",
+                "required": True,
+            },
+        )
+        sub: Optional[int] = field(
+            default=None,
+            metadata={
+                "type": "Element",
+                "required": True,
+            },
+        )
+        is_readable: bool = field(
+            default=False,
+            metadata={
+                "name": "is.readable",
+                "type": "Attribute",
+            },
+        )
+
+    @dataclass
+    class ListeningGa:
+        main: Optional[int] = field(
+            default=None,
+            metadata={
+                "type": "Element",
+                "required": True,
+            },
+        )
+        middle: Optional[int] = field(
+            default=None,
+            metadata={
+                "type": "Element",
+                "required": True,
+            },
+        )
+        sub: Optional[int] = field(
+            default=None,
+            metadata={
+                "type": "Element",
+                "required": True,
+            },
+        )
+        is_readable: bool = field(
+            default=True,
+            metadata={
+                "name": "is.readable",
+                "type": "Attribute",
+            },
+        )
 
 
 @dataclass

@@ -14,14 +14,13 @@ Bridge knx:ip:bridge [
 		pingInterval=300,
 		readInterval=3600
 		] {
-			Type rollershutter	 : WOZ_RW_SHUTTER_Nordfenster_Auf_Ab	 "Auf/Ab"	 [ upDown="8/2/0",stopMove="8/2/1",position="8/2/4" ]
-			Type switch	 : WOZ_RW_SHUTTER_Nordfenster_Stop	 "Stop"
-			Type contact	 : WOZ_R_SHUTTER_Nordfenster_Aktuelle_Richtung	 "Aktuelle Richtung"	 [ ga="8/2/2" ]
-			Type number	 : WOZ_R_SHUTTER_Nordfenster_absolute_Position	 "absolute Position"	 [ ga="8/2/3" ]
-			Type contact	 : WOZ_R_SHUTTER_Nordfenster_Status_aktuelle_Position	 "Status aktuelle Position"	 [ ga="8/2/4" ]
-			Type contact	 : WOZ_R_SHUTTER_Nordfenster_Status_obere_Position	 "Status obere Position"	 [ ga="8/2/5" ]
-			Type contact	 : WOZ_R_SHUTTER_Nordfenster_Status_untere_Position	 "Status untere Position"	 [ ga="8/2/6" ]
-			Type switch	 : WOZ_RW_SHUTTER_Nordfenster_Sperre	 "Sperre"
-			Type string	 : WOZ_R_SHUTTER_Nordfenster_Diagnose	 "Diagnose"
-			
-		
+			Type rollershutter		 : WOZ_RW_SHUTTER_Nordfenster_Auf_Ab		 "Auf/Ab"		 [ upDown="8/2/0",stopMove="8/2/1",position="8/2/4+<8/2/3"]
+			Type switch		 : WOZ_RW_SHUTTER_Nordfenster_Stop		 "Stop"		 [ ga="8/2/0"]
+			Type contact		 : WOZ_R_SHUTTER_Nordfenster_Aktuelle_Richtung		 "Aktuelle Richtung"		 [ ga="<8/2/2" ]
+			Type number		 : WOZ_R_SHUTTER_Nordfenster_absolute_Position		 "absolute Position"		 [ ga="<8/2/3" ]
+			Type contact		 : WOZ_R_SHUTTER_Nordfenster_Status_aktuelle_Position		 "Status aktuelle Position"		 [ ga="<8/2/4" ]
+			Type contact		 : WOZ_R_SHUTTER_Nordfenster_Status_obere_Position		 "Status obere Position"		 [ ga="<8/2/5" ]
+			Type contact		 : WOZ_R_SHUTTER_Nordfenster_Status_untere_Position		 "Status untere Position"		 [ ga="<8/2/6" ]
+			Type switch		 : WOZ_RW_SHUTTER_Nordfenster_Sperre		 "Sperre"		 [ ga="8/2/7"]
+			Type string		 : WOZ_R_SHUTTER_Nordfenster_Diagnose		 "Diagnose"		 [ ga="<8/2/8" ]
+		}}

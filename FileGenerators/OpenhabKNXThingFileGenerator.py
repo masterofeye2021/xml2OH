@@ -82,6 +82,8 @@ class OpenhabKNXThingFileGenerator(OpenhabFileGenerator):
                     self.writeGroupAddress(channel)
                     self.file.write("\n\t\t\t")
         self.file.write("\n\t\t")
+        self.file.write("}")
+        self.file.write("}")
 
     def writeChannelType(self, type : str):
         self.file.write("Type " + type.lower())
@@ -91,22 +93,63 @@ class OpenhabKNXThingFileGenerator(OpenhabFileGenerator):
         name = name.replace(" ", "_")
         name = name.replace("/", "_")
 
-        self.file.write("\t : " + name)
+        self.file.write("\t\t : " + name)
 
 
     def writeChannelLabel(self, device : Device, channel: Channel):
-        self.file.write("\t \"" + channel.name + "\"")
+        self.file.write("\t\t \"" + channel.name + "\"")
 
     def writeGroupAddress(self,channel: Channel):
         if channel.type_value == TypeValue.CONTACT:
-            self.file.write("\t [ ga=\""+ str(channel.connection.knx.add1.main) + "/" + str(channel.connection.knx.add1.middle) +"/"+ str(channel.connection.knx.add1.sub)+"\" ]")
+            self.file.write("\t\t [ ga=\"<"+ str(channel.connection.knx.add1.main_ga.main) + "/" + str(channel.connection.knx.add1.main_ga.middle) +"/"+ str(channel.connection.knx.add1.main_ga.sub)+"\" ]")
 
-        if channel.type_value == TypeValue.NUMBER:
-            self.file.write("\t [ ga=\""+ str(channel.connection.knx.add1.main) + "/" + str(channel.connection.knx.add1.middle) +"/"+ str(channel.connection.knx.add1.sub)+"\" ]")
+        if channel.type_value == TypeValue.NUMBER or channel.type_value == TypeValue.STRING:
+            self.file.write("\t\t [ ga=\"<"+ str(channel.connection.knx.add1.main_ga.main) + "/" + str(channel.connection.knx.add1.main_ga.middle) +"/"+ str(channel.connection.knx.add1.main_ga.sub)+"\" ]")
 
         if channel.type_value == TypeValue.ROLLERSHUTTER:
-            self.file.write("\t [ upDown=\""+ str(channel.connection.knx.add1.main) + "/" + str(channel.connection.knx.add1.middle) +"/"+ str(channel.connection.knx.add1.sub)+"\","
-                            "stopMove=\""+ str(channel.connection.knx.add2.main) + "/" + str(channel.connection.knx.add2.middle) +"/"+ str(channel.connection.knx.add2.sub)+"\"," +
-                            "position=\""+ str(channel.connection.knx.add3.main) + "/" + str(channel.connection.knx.add3.middle) +"/"+ str(channel.connection.knx.add3.sub)+"\" ]")
-
+            upDownMainGa = str(channel.connection.knx.add1.main_ga.main) + "/" + str(channel.connection.knx.add1.main_ga.middle) +"/"+ str(channel.connection.knx.add1.main_ga.sub)
             
+            stopMainGa = str(channel.connection.knx.add2.main_ga.main) + "/" + str(channel.connection.knx.add2.main_ga.middle) +"/"+ str(channel.connection.knx.add2.main_ga.sub)
+            
+            positionMainGa = str(channel.connection.knx.add3.main_ga.main) + "/" + str(channel.connection.knx.add3.main_ga.middle) +"/"+ str(channel.connection.knx.add3.main_ga.sub)
+            
+
+            self.file.write("\t\t [ ")
+            if channel.connection.knx.add1.main_ga.is_readable: 
+                self.file.write("upDown=\"<"+ upDownMainGa +"\",")
+            elif channel.connection.knx.add1.listening_ga != None:
+                upDownListeningGa = str(channel.connection.knx.add1.listening_ga.main) + "/" + str(channel.connection.knx.add1.listening_ga.middle) +"/"+ str(channel.connection.knx.add1.listening_ga.sub)
+                self.file.write("upDown=\"<"+ upDownMainGa + "+<"+ upDownListeningGa +"\",")
+            else:
+                self.file.write("upDown=\""+ upDownMainGa +"\",")
+
+            if channel.connection.knx.add2.main_ga.is_readable: 
+                self.file.write("stopMove=\"<"+ stopMainGa +"\",")
+            elif channel.connection.knx.add2.listening_ga != None:
+                stopListeningGa= str(channel.connection.knx.add2.listening_ga.main) + "/" + str(channel.connection.knx.add2.listening_ga.middle) +"/"+ str(channel.connection.knx.add2.listening_ga.sub)
+                self.file.write("stopMove=\"<"+ stopMainGa + "+<"+ stopListeningGa +"\",")
+            else:
+                self.file.write("stopMove=\""+ stopMainGa +"\",")
+
+            if channel.connection.knx.add3.main_ga.is_readable: 
+                self.file.write("position=\"<"+ positionMainGa +"\"")
+            elif channel.connection.knx.add3.listening_ga != None:
+                positionListeningGa = str(channel.connection.knx.add3.listening_ga.main) + "/" + str(channel.connection.knx.add3.listening_ga.middle) +"/"+ str(channel.connection.knx.add3.listening_ga.sub)
+                self.file.write("position=\""+ positionMainGa + "+<"+ positionListeningGa +"\"")
+            else:
+                self.file.write("position=\""+ positionMainGa +"\"")
+
+            self.file.write("]")
+        
+        if channel.type_value == TypeValue.SWITCH:
+            mainGa = str(channel.connection.knx.add1.main_ga.main) + "/" + str(channel.connection.knx.add1.main_ga.middle) +"/"+ str(channel.connection.knx.add1.main_ga.sub)
+            self.file.write("\t\t [ ")
+            if channel.connection.knx.add1.main_ga.is_readable: 
+                self.file.write("ga=\"<"+ mainGa +"\"")
+            elif channel.connection.knx.add1.listening_ga != None:
+                listeningGa = str(channel.connection.knx.add1.listening_ga.main) + "/" + str(channel.connection.knx.add1.listening_ga.middle) +"/"+ str(channel.connection.knx.add1.listening_ga.sub)
+                self.file.write("ga=\"<"+ mainGa + "+<"+ listeningGa +"\"")
+            else:
+                self.file.write("ga=\""+ mainGa +"\"")
+            
+            self.file.write("]")
