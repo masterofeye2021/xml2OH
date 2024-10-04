@@ -1,7 +1,7 @@
 from FileGenerators.OpenhabFileGenerator import OpenhabFileGenerator
 from smarthome import Openhab, Unit, Area, Format, Function, Channel, Device, Comm, Groups, Group
 import os
-
+from typing import cast
 
 
 EXPORTDIRECTORY = "export"
@@ -10,21 +10,64 @@ ITEMFILEKNX = "knx.items"
 
 class OpenhabItemFileGenerator(OpenhabFileGenerator):
     def __init__(self, file_location : str) -> None:
-        
+        self.currentDeviceName = ""
+        self.umlaut_map = str.maketrans({"ä": "ae", "ö": "oe", "ü": "ue", "ß": "ss"})
         abs_file_path = os.path.join(file_location, EXPORTDIRECTORY+ "\\" + ITEMDIRECTORY + "\\" + ITEMFILEKNX)
-        self.file = open(abs_file_path, "w+")
+        self.file = open(abs_file_path, "w+",-1,"utf-8")
         super().__init__()
 
 
     def writeFile(self,devices : list[Device], groups: list[Group]):
+        #Write all groups that are in the xml document
+        for group in groups:
+            self.writeGroups(group)
+
+        self.file.write("\n")
+        #Write all devices -> items
         for device in devices:
             if device.device_comm_type == Comm.KNX:
                 for channel in device.channel:
                     self.writeRow(device,channel, groups)
+                
         # Close the handle independent what happened
         self.file.close()
 
+    def writeGroups(self, group: Group):
+        self.file.write("Group ")
+        self.file.write(group.name.translate(self.umlaut_map))
+        if group.function:
+            self.file.write(":" + group.function.value)
+        self.file.write(" ")
+        self.file.write("\"")
+        self.file.write(group.label)
+        self.file.write("\"")
+        self.file.write(" ")
+        self.file.write("<")
+        self.file.write(group.icon.value)
+        self.file.write(">")
+        self.file.write(" ")
+        
+        if len(group.group_ref) > 0:
+            self.file.write("(")
+        
+        groupstring = ""
+        for g2 in group.group_ref:
+            g3 = cast(Channel.Groups.GroupRef,g2)
+            groupstring += (g3.refid)
+            groupstring +=(",")
+        self.file.write(groupstring.rstrip(","))
+
+        if len(group.group_ref) > 0:
+            self.file.write(")")
+        
+        self.file.write("\n")
+        
+
     def writeRow(self, device : Device, channel : Channel, groups: list[Group]):
+        if self.currentDeviceName != device.device_name or not self.currentDeviceName:
+            self.currentDeviceName = device.device_name
+            self.file.write("\n")
+
         self.writeType(channel)
         name = self.writeName(device,channel)
         self.writeLabel(channel)
@@ -35,6 +78,8 @@ class OpenhabItemFileGenerator(OpenhabFileGenerator):
         self.file.write("\n")
 
 
+
+
     def writeType(self,channel : Channel):
         self.file.write(channel.type_value.value + " ")
         self.file.write(" ")
@@ -43,6 +88,7 @@ class OpenhabItemFileGenerator(OpenhabFileGenerator):
         name = device.device_area.value + "_" +  channel.access.value+ "_" + device.device_function.value + "_" + channel.extention + "_" +  channel.name 
         name = name.replace(" ", "_")
         name = name.replace("/", "_")
+        name = name.translate(self.umlaut_map)
         self.file.write(name)
         self.file.write(" ")
         return name
@@ -65,10 +111,10 @@ class OpenhabItemFileGenerator(OpenhabFileGenerator):
         
         self.file.write(startDelimiter)
         groupString = ""
-        for group in channel.groups.group:
+        for group in channel.groups.group_ref:
             matches = [x for x in groups if x.id == group.refid]
             if len(matches) > 0:
-                groupString += matches[0].name
+                groupString += matches[0].name.translate(self.umlaut_map)
                 groupString += ","
         self.file.write(groupString.rstrip(","))
         self.file.write(endDelmiter)

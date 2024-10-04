@@ -19,7 +19,7 @@ class Area(Enum):
     HWR = "HWR"
     GWC = "GWC"
     FLUEG = "FLUEG"
-    BUE = "BUE"
+    BUR = "BUR"
     SLZ = "SLZ"
     BAD = "BAD"
     KIZ = "KIZ"
@@ -396,9 +396,10 @@ class Group:
     class Meta:
         name = "group"
 
-    group: List[object] = field(
+    group_ref: List["Group.GroupRef"] = field(
         default_factory=list,
         metadata={
+            "name": "group.ref",
             "type": "Element",
         },
     )
@@ -443,6 +444,15 @@ class Group:
             "type": "Attribute",
         },
     )
+
+    @dataclass
+    class GroupRef:
+        refid: Optional[str] = field(
+            default=None,
+            metadata={
+                "type": "Attribute",
+            },
+        )
 
 
 @dataclass
@@ -650,16 +660,17 @@ class Channel:
 
     @dataclass
     class Groups:
-        group: List["Channel.Groups.Group"] = field(
+        group_ref: List["Channel.Groups.GroupRef"] = field(
             default_factory=list,
             metadata={
+                "name": "group.ref",
                 "type": "Element",
                 "min_occurs": 1,
             },
         )
 
         @dataclass
-        class Group:
+        class GroupRef:
             refid: Optional[str] = field(
                 default=None,
                 metadata={

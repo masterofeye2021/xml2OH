@@ -13,7 +13,7 @@ def main():
     openhab = parser.parse("SmartHomeConfiguration.xml", Openhab)
     itemfileGenerator.writeFile(openhab.devices.device, openhab.groups.group)
     thingfileGenerator.writeBridge(openhab.knx_configuration, openhab.devices.device)
-0
+
 if __name__ == "__main__":
     main()
 

@@ -10,9 +10,9 @@ THINGFILEKNX = "knx.things"
 
 class OpenhabKNXThingFileGenerator(OpenhabFileGenerator):
     def __init__(self, file_location : str) -> None:
-        
+        self.umlaut_map = str.maketrans({"ä": "ae", "ö": "oe", "ü": "ue", "ß": "ss"})
         abs_file_path = os.path.join(file_location, EXPORTDIRECTORY+ "\\" + THINGDIRECTORY + "\\" + THINGFILEKNX)
-        self.file = open(abs_file_path, "w+")
+        self.file = open(abs_file_path, "w+",-1,"utf-8")
         super().__init__()
 
 
@@ -23,7 +23,7 @@ class OpenhabKNXThingFileGenerator(OpenhabFileGenerator):
         self.file.write("type=\"" + knx.bridge.type_value + "\",")
         self.file.write("\n\t")
 
-        self.file.write("ipdAddress=\"" + knx.bridge.ip_address+ "\",")
+        self.file.write("ipAddress=\"" + knx.bridge.ip_address+ "\",")
         self.file.write("\n\t")
 
         self.file.write("portNumber=" + knx.bridge.port_number+ ",")
@@ -57,7 +57,7 @@ class OpenhabKNXThingFileGenerator(OpenhabFileGenerator):
         self.file.write("type=\"" + knx.tunnel.address + "\",")
         self.file.write("\n\t\t")
 
-        self.file.write("fetch=" + str(knx.tunnel.fetch) + ",")
+        self.file.write("fetch=" + str(knx.tunnel.fetch).lower() + ",")
         self.file.write("\n\t\t")
 
         self.file.write("pingInterval=" + str(knx.tunnel.ping_interval)+ ",")
@@ -93,7 +93,7 @@ class OpenhabKNXThingFileGenerator(OpenhabFileGenerator):
         name = name.replace(" ", "_")
         name = name.replace("/", "_")
 
-        self.file.write("\t\t : " + name)
+        self.file.write("\t\t : " + name.translate(self.umlaut_map))
 
 
     def writeChannelLabel(self, device : Device, channel: Channel):
