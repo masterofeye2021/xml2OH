@@ -55,7 +55,7 @@ class OpenhabItemFileGenerator(OpenhabFileGenerator):
             g3 = cast(Channel.Groups.GroupRef,g2)
             groupstring += (g3.refid)
             groupstring +=(",")
-        self.file.write(groupstring.rstrip(","))
+        self.file.write(groupstring.rstrip(",").translate(self.umlaut_map))
 
         if len(group.group_ref) > 0:
             self.file.write(")")
@@ -116,7 +116,7 @@ class OpenhabItemFileGenerator(OpenhabFileGenerator):
             if len(matches) > 0:
                 groupString += matches[0].name.translate(self.umlaut_map)
                 groupString += ","
-        self.file.write(groupString.rstrip(","))
+        self.file.write(groupString.rstrip(",").translate(self.umlaut_map))
         self.file.write(endDelmiter)
         self.file.write(" ")
 

@@ -78,6 +78,17 @@ class Icon(Enum):
     FA_SIGNAL = "fa-signal"
     FA_OCTAGON = "fa-octagon"
     FA_LOCK = "fa-lock"
+    FA_ARROWS_UP_DOWN = "fa-arrows-up-down"
+    FA_HAND = "fa-hand"
+    FA_COMPASS = "fa-compass"
+    FA_LOCATION_DOT = "fa-location-dot"
+    FA_UP_TO_LINE = "fa-up-to-line"
+    FA_DOWN_FROM_LINE = "fa-down-from-line"
+    FA_STETHOSCOPE = "fa-stethoscope"
+    FA_DROPLET_PERCENT = "fa-droplet-percent"
+    FA_WIND = "fa-wind"
+    FA_POO = "fa-poo"
+    FA_HEAT = "fa-heat"
 
 
 @dataclass
@@ -321,6 +332,8 @@ class Unit(Enum):
     U = "U"
     I = "I"
     PERCENT_SIGN = "%"
+    PPM = "ppm"
+    H_PA = "hPa"
 
 
 @dataclass
@@ -576,16 +589,18 @@ class Channel:
             "required": True,
         },
     )
-    unit: Unit = field(
-        default=Unit.ND,
+    unit: Optional[Unit] = field(
+        default=None,
         metadata={
             "type": "Attribute",
+            "required": True,
         },
     )
     access: Optional[Access] = field(
         default=None,
         metadata={
             "type": "Attribute",
+            "required": True,
         },
     )
     icon: Optional[Icon] = field(
@@ -602,10 +617,11 @@ class Channel:
             "required": True,
         },
     )
-    persistence: bool = field(
-        default=False,
+    persistence: Optional[bool] = field(
+        default=None,
         metadata={
             "type": "Attribute",
+            "required": True,
         },
     )
     label: Optional[str] = field(
@@ -620,6 +636,7 @@ class Channel:
         metadata={
             "name": "type",
             "type": "Attribute",
+            "required": True,
         },
     )
     name: Optional[str] = field(

@@ -1,4 +1,5 @@
 import xml.etree.ElementTree as ET
+
 from smarthome import Openhab, Unit, Area, Format, Function, Channel
 from xsdata.formats.dataclass.parsers import XmlParser
 from FileGenerators.OpenhabItemFileGenerator import OpenhabItemFileGenerator
@@ -13,6 +14,8 @@ def main():
     openhab = parser.parse("SmartHomeConfiguration.xml", Openhab)
     itemfileGenerator.writeFile(openhab.devices.device, openhab.groups.group)
     thingfileGenerator.writeBridge(openhab.knx_configuration, openhab.devices.device)
+
+
 
 if __name__ == "__main__":
     main()
