@@ -48,7 +48,7 @@
 				</xs:complexType>
 			</xs:element>
 		</xs:sequence>
-		<xs:attribute name="device.area" type="area"/>
+		<xs:attribute name="device.area" type="area" use="required"/>
 		<xs:attribute name="device.function">
 			<xs:annotation>
 				<xs:appinfo>
@@ -62,8 +62,17 @@
 			</xs:simpleType>
 		</xs:attribute>
 		<xs:attribute name="device.comm.type" type="comm" default="KNX"/>
-		<xs:attribute name="device.label" type="xs:string"/>
-		<xs:attribute name="device.name" type="xs:string"/>
+		<xs:attribute name="device.label" type="xs:string" use="required"/>
+		<xs:attribute name="device.name" type="xs:string" use="required"/>
+		<xs:attribute name="device.specification" use="required">
+			<xs:simpleType>
+				<xs:restriction base="device.specification">
+					<xs:enumeration value="SteinelTruePräsenz"/>
+					<xs:enumeration value="RolladenMDTKNX"/>
+					<xs:enumeration value="ICALBinding"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
 	</xs:complexType>
 	<xs:simpleType name="function">
 		<xs:restriction base="xs:anyURI">
@@ -126,6 +135,7 @@
 		<xs:attribute ref="type" use="required"/>
 		<xs:attribute name="name" type="xs:string" use="required"/>
 		<xs:attribute name="extention" type="xs:string" use="optional"/>
+		<xs:attribute name="channel.id" type="xs:int" use="required"/>
 	</xs:complexType>
 	<xs:simpleType name="access">
 		<xs:restriction base="xs:anyURI">
@@ -399,4 +409,11 @@
 			</xs:attribute>
 		</xs:complexType>
 	</xs:element>
+	<xs:simpleType name="device.specification">
+		<xs:restriction base="xs:anyURI">
+			<xs:enumeration value="SteinelTruePräsenz"/>
+			<xs:enumeration value="RolladenMDTKNX"/>
+			<xs:enumeration value="ICALBinding"/>
+		</xs:restriction>
+	</xs:simpleType>
 </xs:schema>
