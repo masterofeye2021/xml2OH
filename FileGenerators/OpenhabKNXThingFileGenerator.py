@@ -89,7 +89,10 @@ class OpenhabKNXThingFileGenerator(OpenhabFileGenerator):
         self.file.write("Type " + type.lower())
 
     def writeChannelName(self, device : Device, channel: Channel):
-        name = device.device_area.value + "_" +  channel.access.value+ "_" + device.device_function.value + "_" + channel.extention + "_" +  channel.name 
+        if channel.extention:
+            name = device.device_area.value + "_" +  channel.access.value+ "_" + device.device_function.value + "_" + channel.extention + "_" +  channel.name 
+        else: 
+            name = device.device_area.value + "_" +  channel.access.value+ "_" + device.device_function.value + "_" +  channel.name 
         name = name.replace(" ", "_")
         name = name.replace("/", "_")
 

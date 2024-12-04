@@ -12,20 +12,20 @@ class OpenhabItemFileGenerator(OpenhabFileGenerator):
     def __init__(self, file_location : str) -> None:
         self.currentDeviceName = ""
         self.umlaut_map = str.maketrans({"ä": "ae", "ö": "oe", "ü": "ue", "ß": "ss"})
-        abs_file_path = os.path.join(file_location, EXPORTDIRECTORY+ "\\" + ITEMDIRECTORY + "\\" + ITEMFILEKNX)
-        self.file = open(abs_file_path, "w+",-1,"utf-8")
+        self.file_location = file_location
         super().__init__()
 
 
-    def writeFile(self,devices : list[Device], groups: list[Group]):
-        #Write all groups that are in the xml document
-        for group in groups:
-            self.writeGroups(group)
+    def writeFile(self,devices : list[Device], groups: list[Group], file_name:str):
+
+        self.abs_file_path = os.path.join(self.file_location, EXPORTDIRECTORY+ "\\" + ITEMDIRECTORY + "\\" + file_name)
+        self.file = open(self.abs_file_path, "w+",-1,"utf-8")
+
+
 
         self.file.write("\n")
         #Write all devices -> items
         for device in devices:
-            if device.device_comm_type == Comm.KNX:
                 for channel in device.channel:
                     self.writeRow(device,channel, groups)
                 
@@ -74,7 +74,10 @@ class OpenhabItemFileGenerator(OpenhabFileGenerator):
         self.writeIcon(channel)
         self.writeGroup(channel,groups)
         self.writeTag(channel)
-        self.writeBindingConfiguration(name)
+        if device.device_comm_type == Comm.KNX:
+            self.writeKNXBindingConfiguration(name)
+        elif device.device_comm_type == Comm.ICAL:
+            self.writeICALBindingConfiguration(name)
         self.file.write("\n")
 
 
@@ -85,12 +88,16 @@ class OpenhabItemFileGenerator(OpenhabFileGenerator):
         self.file.write(" ")
 
     def writeName(self, device : Device, channel : Channel):
-        name = device.device_area.value + "_" +  channel.access.value+ "_" + device.device_function.value + "_" + channel.extention + "_" +  channel.name 
+        if channel.extention:
+            name = device.device_area.value + "_" +  channel.access.value+ "_" + device.device_function.value + "_" + channel.extention + "_" +  channel.name 
+        else: 
+            name = device.device_area.value + "_" +  channel.access.value+ "_" + device.device_function.value + "_" +  channel.name 
         name = name.replace(" ", "_")
         name = name.replace("/", "_")
         name = name.translate(self.umlaut_map)
         self.file.write(name)
         self.file.write(" ")
+        channel.link = name
         return name
 
     def writeLabel(self, channel : Channel):
@@ -125,7 +132,7 @@ class OpenhabItemFileGenerator(OpenhabFileGenerator):
         #self.file.write(" ")
         pass
 
-    def writeBindingConfiguration(self, name: str):
+    def writeKNXBindingConfiguration(self,name: str):
         startDel = "{"
         stopDel = "}"
         self.file.write(startDel)
@@ -133,8 +140,12 @@ class OpenhabItemFileGenerator(OpenhabFileGenerator):
         self.file.write(stopDel)
         pass
 
-    def writeKNXBindingConfiguration(self):
+    def writeModbusBindingConfiguration(self):
         pass
 
-    def writeModbusBindingsConfiguration(self):
-        pass
+    def writeICALBindingConfiguration(self,name :str):
+        startDel = "{"
+        stopDel = "}"
+        self.file.write(startDel)
+        self.file.write("channel=\"icalendar:eventfilter:"+ name + ":result_0#begin"+ "\"")
+        self.file.write(stopDel)

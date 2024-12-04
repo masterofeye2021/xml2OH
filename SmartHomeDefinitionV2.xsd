@@ -23,6 +23,7 @@
 				<xs:element name="devices" type="devices"/>
 				<xs:element name="groups" type="groups"/>
 				<xs:element ref="knx.configuration"/>
+				<xs:element ref="ical.configuration"/>
 			</xs:all>
 		</xs:complexType>
 	</xs:element>
@@ -70,10 +71,11 @@
 			<xs:enumeration value="SHUTTER"/>
 			<xs:enumeration value="SENSOR"/>
 			<xs:enumeration value="PINGDEVICE"/>
+			<xs:enumeration value="CALENDAR"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="unit">
-		<xs:restriction base="xs:anyURI">
+		<xs:restriction base="xs:string">
 			<xs:enumeration value="ND"/>
 			<xs:enumeration value="°C"/>
 			<xs:enumeration value="K"/>
@@ -93,6 +95,7 @@
 						<xs:element name="knx" type="knx"/>
 						<xs:element name="ping" type="ping"/>
 						<xs:element name="modbus" type="modbus"/>
+						<xs:element ref="ical"/>
 					</xs:choice>
 				</xs:complexType>
 			</xs:element>
@@ -122,7 +125,7 @@
 		<xs:attribute name="label" type="xs:string" use="required"/>
 		<xs:attribute ref="type" use="required"/>
 		<xs:attribute name="name" type="xs:string" use="required"/>
-		<xs:attribute name="extention" type="xs:string" use="required"/>
+		<xs:attribute name="extention" type="xs:string" use="optional"/>
 	</xs:complexType>
 	<xs:simpleType name="access">
 		<xs:restriction base="xs:anyURI">
@@ -173,6 +176,7 @@
 			<xs:enumeration value="fa-wind"/>
 			<xs:enumeration value="fa-poo"/>
 			<xs:enumeration value="fa-heat"/>
+			<xs:enumeration value="fa-calendar-day"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="comm">
@@ -180,6 +184,7 @@
 			<xs:enumeration value="KNX"/>
 			<xs:enumeration value="MODBUS"/>
 			<xs:enumeration value="PING"/>
+			<xs:enumeration value="ICAL"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:complexType name="knx">
@@ -220,7 +225,7 @@
 		</xs:all>
 	</xs:complexType>
 	<xs:simpleType name="format">
-		<xs:restriction base="xs:anyURI">
+		<xs:restriction base="xs:string">
 			<xs:enumeration value="%.0f"/>
 			<xs:enumeration value="%.1f"/>
 			<xs:enumeration value="%.2f"/>
@@ -339,6 +344,59 @@
 					</xs:complexType>
 				</xs:element>
 			</xs:all>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="ical.configuration">
+		<xs:complexType>
+			<xs:all>
+				<xs:element name="bridge">
+					<xs:complexType>
+						<xs:attribute name="url" type="xs:string" use="required"/>
+						<xs:attribute name="refreshTime" type="xs:short" use="required"/>
+						<xs:attribute name="username" type="xs:string" use="required"/>
+						<xs:attribute name="password" type="xs:string" use="required"/>
+						<xs:attribute name="maxSize" type="xs:short" use="required"/>
+					</xs:complexType>
+				</xs:element>
+			</xs:all>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="ical">
+		<xs:complexType>
+			<xs:attribute name="maxEvents" type="xs:short" use="required"/>
+			<xs:attribute name="refreshTime" type="xs:short" use="required"/>
+			<xs:attribute name="datetimeUnit" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:anyURI">
+						<xs:enumeration value="MINUTE"/>
+						<xs:enumeration value="HOUR"/>
+						<xs:enumeration value="DAY"/>
+						<xs:enumeration value="WEEK"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="datetimeStart" type="xs:string" use="required"/>
+			<xs:attribute name="datetimeEnd" type="xs:string" use="required"/>
+			<xs:attribute name="textEventField" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:anyURI">
+						<xs:pattern value="SUMMARY"/>
+						<xs:pattern value="DESCRIPTION"/>
+						<xs:pattern value="COMMENT"/>
+						<xs:pattern value="CONTACT"/>
+						<xs:pattern value="LOCATION"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="textEventValue" type="xs:string" use="required"/>
+			<xs:attribute name="textValueType" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:anyURI">
+						<xs:enumeration value="TEXT"/>
+						<xs:enumeration value="REGEX"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
 		</xs:complexType>
 	</xs:element>
 </xs:schema>

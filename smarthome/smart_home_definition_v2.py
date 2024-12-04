@@ -37,6 +37,7 @@ class Comm(Enum):
     KNX = "KNX"
     MODBUS = "MODBUS"
     PING = "PING"
+    ICAL = "ICAL"
 
 
 class Format(Enum):
@@ -51,6 +52,7 @@ class Function(Enum):
     SHUTTER = "SHUTTER"
     SENSOR = "SENSOR"
     PINGDEVICE = "PINGDEVICE"
+    CALENDAR = "CALENDAR"
 
 
 class GroupFunction(Enum):
@@ -66,6 +68,72 @@ class GroupFunction(Enum):
     COUNT = "COUNT"
     LATEST = "LATEST"
     EARLIEST = "EARLIEST"
+
+
+@dataclass
+class IcalConfiguration:
+    class Meta:
+        name = "ical.configuration"
+
+    bridge: Optional["IcalConfiguration.Bridge"] = field(
+        default=None,
+        metadata={
+            "type": "Element",
+            "required": True,
+        },
+    )
+
+    @dataclass
+    class Bridge:
+        url: Optional[str] = field(
+            default=None,
+            metadata={
+                "type": "Attribute",
+                "required": True,
+            },
+        )
+        refresh_time: Optional[str] = field(
+            default=None,
+            metadata={
+                "name": "refreshTime",
+                "type": "Attribute",
+                "required": True,
+            },
+        )
+        username: Optional[object] = field(
+            default=None,
+            metadata={
+                "type": "Attribute",
+                "required": True,
+            },
+        )
+        password: Optional[object] = field(
+            default=None,
+            metadata={
+                "type": "Attribute",
+                "required": True,
+            },
+        )
+        max_size: Optional[object] = field(
+            default=None,
+            metadata={
+                "name": "maxSize",
+                "type": "Attribute",
+                "required": True,
+            },
+        )
+
+
+class IcalDatetimeUnit(Enum):
+    MINUTE = "MINUTE"
+    HOUR = "HOUR"
+    DAY = "DAY"
+    WEEK = "WEEK"
+
+
+class IcalTextValueType(Enum):
+    TEXT = "TEXT"
+    REGEX = "REGEX"
 
 
 class Icon(Enum):
@@ -89,6 +157,7 @@ class Icon(Enum):
     FA_WIND = "fa-wind"
     FA_POO = "fa-poo"
     FA_HEAT = "fa-heat"
+    FA_CALENDAR_DAY = "fa-calendar-day"
 
 
 @dataclass
@@ -469,6 +538,78 @@ class Group:
 
 
 @dataclass
+class Ical:
+    class Meta:
+        name = "ical"
+
+    max_events: Optional[int] = field(
+        default=None,
+        metadata={
+            "name": "maxEvents",
+            "type": "Attribute",
+            "required": True,
+        },
+    )
+    refresh_time: Optional[int] = field(
+        default=None,
+        metadata={
+            "name": "refreshTime",
+            "type": "Attribute",
+            "required": True,
+        },
+    )
+    datetime_unit: Optional[IcalDatetimeUnit] = field(
+        default=None,
+        metadata={
+            "name": "datetimeUnit",
+            "type": "Attribute",
+            "required": True,
+        },
+    )
+    datetime_start: Optional[str] = field(
+        default=None,
+        metadata={
+            "name": "datetimeStart",
+            "type": "Attribute",
+            "required": True,
+        },
+    )
+    datetime_end: Optional[str] = field(
+        default=None,
+        metadata={
+            "name": "datetimeEnd",
+            "type": "Attribute",
+            "required": True,
+        },
+    )
+    text_event_field: Optional[str] = field(
+        default=None,
+        metadata={
+            "name": "textEventField",
+            "type": "Attribute",
+            "required": True,
+            "pattern": r"SUMMARY|DESCRIPTION|COMMENT|CONTACT|LOCATION",
+        },
+    )
+    text_event_value: Optional[str] = field(
+        default=None,
+        metadata={
+            "name": "textEventValue",
+            "type": "Attribute",
+            "required": True,
+        },
+    )
+    text_value_type: Optional[IcalTextValueType] = field(
+        default=None,
+        metadata={
+            "name": "textValueType",
+            "type": "Attribute",
+            "required": True,
+        },
+    )
+
+
+@dataclass
 class Knx:
     class Meta:
         name = "knx"
@@ -650,7 +791,6 @@ class Channel:
         default=None,
         metadata={
             "type": "Attribute",
-            "required": True,
         },
     )
 
@@ -669,6 +809,12 @@ class Channel:
             },
         )
         modbus: Optional[Modbus] = field(
+            default=None,
+            metadata={
+                "type": "Element",
+            },
+        )
+        ical: Optional[Ical] = field(
             default=None,
             metadata={
                 "type": "Element",
@@ -800,6 +946,14 @@ class Openhab:
         default=None,
         metadata={
             "name": "knx.configuration",
+            "type": "Element",
+            "required": True,
+        },
+    )
+    ical_configuration: Optional[IcalConfiguration] = field(
+        default=None,
+        metadata={
+            "name": "ical.configuration",
             "type": "Element",
             "required": True,
         },
