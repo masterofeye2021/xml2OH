@@ -20,6 +20,7 @@ class Area(Enum):
     GWC = "GWC"
     FLUEG = "FLUEG"
     BUR = "BUR"
+    ANK = "ANK"
     SLZ = "SLZ"
     BAD = "BAD"
     KIZ = "KIZ"
@@ -30,7 +31,7 @@ class Area(Enum):
     LAG = "LAG"
     GAR = "GAR"
     CAR = "CAR"
-    VALUE = ""
+    BSZ = "BSZ"
 
 
 class Comm(Enum):
@@ -38,6 +39,24 @@ class Comm(Enum):
     MODBUS = "MODBUS"
     PING = "PING"
     ICAL = "ICAL"
+    NTP = "NTP"
+    EKEY = "EKEY"
+    HTTP = "HTTP"
+
+
+class DeviceSpecification(Enum):
+    POWER_KNX = "PowerKNX"
+    STEINEL_TRUE_PR_SENZ = "SteinelTruePräsenz"
+    ROLLADEN_MDTKNX = "RolladenMDTKNX"
+    ICALBINDING = "ICALBinding"
+    NTPBINDING = "NTPBinding"
+    LIGHT_KNXLIGHT = "LightKNXlight"
+    LIGHT_KNXMIDDLE = "LightKNXMiddle"
+    LIGHT_KNXFULL = "LightKNXfull"
+    GLASTASTER_KNX = "GlastasterKNX"
+    TUER_CONTACT_KNX = "TuerContactKNX"
+    EKEYDOOR = "EKEYDoor"
+    HTTP = "HTTP"
 
 
 class Format(Enum):
@@ -45,14 +64,19 @@ class Format(Enum):
     VALUE_1F = "%.1f"
     VALUE_2F = "%.2f"
     ND = "ND"
+    VALUE_1_TD_1_TM_1_T_Y_1_T_H_1_T_M = "%1$td.%1$tm.%1$tY %1$tH:%1$tM"
 
 
 class Function(Enum):
+    NTP = "NTP"
     LIGHT = "LIGHT"
     SHUTTER = "SHUTTER"
     SENSOR = "SENSOR"
     PINGDEVICE = "PINGDEVICE"
     CALENDAR = "CALENDAR"
+    CONTROLUNIT = "CONTROLUNIT"
+    POWER = "POWER"
+    DOOR = "DOOR"
 
 
 class GroupFunction(Enum):
@@ -92,7 +116,7 @@ class IcalConfiguration:
                 "required": True,
             },
         )
-        refresh_time: Optional[str] = field(
+        refresh_time: Optional[int] = field(
             default=None,
             metadata={
                 "name": "refreshTime",
@@ -100,21 +124,21 @@ class IcalConfiguration:
                 "required": True,
             },
         )
-        username: Optional[object] = field(
+        username: Optional[str] = field(
             default=None,
             metadata={
                 "type": "Attribute",
                 "required": True,
             },
         )
-        password: Optional[object] = field(
+        password: Optional[str] = field(
             default=None,
             metadata={
                 "type": "Attribute",
                 "required": True,
             },
         )
-        max_size: Optional[object] = field(
+        max_size: Optional[int] = field(
             default=None,
             metadata={
                 "name": "maxSize",
@@ -158,6 +182,14 @@ class Icon(Enum):
     FA_POO = "fa-poo"
     FA_HEAT = "fa-heat"
     FA_CALENDAR_DAY = "fa-calendar-day"
+    FA_TOGGLE_ON = "fa-toggle-on"
+    FA_QUOTE_LEFT = "fa-quote-left"
+    FA_STREET_VIEW = "fa-street-view"
+    FA_POWER_OFF = "fa-power-off"
+    FA_BAN = "fa-ban"
+    FA_TIMER = "fa-timer"
+    FA_PLUG = "fa-plug"
+    FA_UTILITY_POLE = "fa-utility-pole"
 
 
 @dataclass
@@ -364,6 +396,60 @@ class ModbusType(Enum):
 
 
 @dataclass
+class NtpConfiguration:
+    class Meta:
+        name = "ntp.configuration"
+
+    thing: Optional["NtpConfiguration.Thing"] = field(
+        default=None,
+        metadata={
+            "type": "Element",
+            "required": True,
+        },
+    )
+
+    @dataclass
+    class Thing:
+        hostname: Optional[str] = field(
+            default=None,
+            metadata={
+                "type": "Attribute",
+                "required": True,
+            },
+        )
+        refresh_interval: Optional[int] = field(
+            default=None,
+            metadata={
+                "name": "refreshInterval",
+                "type": "Attribute",
+                "required": True,
+            },
+        )
+        refresh_ntp: Optional[int] = field(
+            default=None,
+            metadata={
+                "name": "refreshNtp",
+                "type": "Attribute",
+                "required": True,
+            },
+        )
+        server_port: Optional[int] = field(
+            default=None,
+            metadata={
+                "name": "serverPort",
+                "type": "Attribute",
+            },
+        )
+        time_zone: Optional[str] = field(
+            default=None,
+            metadata={
+                "name": "timeZone",
+                "type": "Attribute",
+            },
+        )
+
+
+@dataclass
 class Ping:
     class Meta:
         name = "ping"
@@ -384,6 +470,36 @@ class Ping:
     )
 
 
+class ThingAuthMode(Enum):
+    BASIC = "BASIC"
+    BASIC_PREEMPTIVE = "BASIC_PREEMPTIVE"
+    TOKEN = "TOKEN"
+    DIGEST = "DIGEST"
+
+
+class ThingCommandMethod(Enum):
+    GET = "GET"
+    PUT = "PUT"
+    POST = "POST"
+
+
+class ThingContentType(Enum):
+    PUT = "PUT"
+    POST = "POST"
+
+
+class ThingProtocol(Enum):
+    RARE = "RARE"
+    MULTI = "MULTI"
+    HOME = "HOME"
+
+
+class ThingStateMethod(Enum):
+    GET = "GET"
+    PUT = "PUT"
+    POST = "POST"
+
+
 class TypeValue(Enum):
     SWITCH = "Switch"
     NUMBER = "Number"
@@ -400,9 +516,13 @@ class Unit(Enum):
     K = "K"
     U = "U"
     I = "I"
-    PERCENT_SIGN = "%"
+    PERCENT_SIGN_PERCENT_SIGN = "%%"
     PPM = "ppm"
     H_PA = "hPa"
+    H = "h"
+    W = "W"
+    WH = "Wh"
+    M_A = "mA"
 
 
 @dataclass
@@ -471,6 +591,171 @@ class Alexa:
             "type": "Attribute",
         },
     )
+
+
+@dataclass
+class DoorConfiguration:
+    class Meta:
+        name = "door.configuration"
+
+    thing: Optional["DoorConfiguration.Thing"] = field(
+        default=None,
+        metadata={
+            "type": "Element",
+            "required": True,
+        },
+    )
+
+    @dataclass
+    class Thing:
+        base_url: Optional[str] = field(
+            default=None,
+            metadata={
+                "name": "baseURL",
+                "type": "Attribute",
+                "required": True,
+            },
+        )
+        timeout: Optional[int] = field(
+            default=None,
+            metadata={
+                "type": "Attribute",
+                "required": True,
+            },
+        )
+        refresh: Optional[int] = field(
+            default=None,
+            metadata={
+                "type": "Attribute",
+                "required": True,
+            },
+        )
+        buffer_size: int = field(
+            default=2048,
+            metadata={
+                "name": "bufferSize",
+                "type": "Attribute",
+            },
+        )
+        delay: Optional[int] = field(
+            default=None,
+            metadata={
+                "type": "Attribute",
+                "required": True,
+            },
+        )
+        username: Optional[str] = field(
+            default=None,
+            metadata={
+                "type": "Attribute",
+            },
+        )
+        password: Optional[str] = field(
+            default=None,
+            metadata={
+                "type": "Attribute",
+            },
+        )
+        auth_mode: Optional[ThingAuthMode] = field(
+            default=None,
+            metadata={
+                "name": "authMode",
+                "type": "Attribute",
+                "required": True,
+            },
+        )
+        state_method: Optional[ThingStateMethod] = field(
+            default=None,
+            metadata={
+                "name": "stateMethod",
+                "type": "Attribute",
+                "required": True,
+            },
+        )
+        command_method: Optional[ThingCommandMethod] = field(
+            default=None,
+            metadata={
+                "name": "commandMethod",
+                "type": "Attribute",
+                "required": True,
+            },
+        )
+        content_type: Optional[ThingContentType] = field(
+            default=None,
+            metadata={
+                "name": "contentType",
+                "type": "Attribute",
+            },
+        )
+        ignore_sslerrors: Optional[bool] = field(
+            default=None,
+            metadata={
+                "name": "ignoreSSLErrors",
+                "type": "Attribute",
+                "required": True,
+            },
+        )
+        strict_error_handling: Optional[bool] = field(
+            default=None,
+            metadata={
+                "name": "strictErrorHandling",
+                "type": "Attribute",
+                "required": True,
+            },
+        )
+
+
+@dataclass
+class EkeyConfiguration:
+    class Meta:
+        name = "ekey.configuration"
+
+    thing: Optional["EkeyConfiguration.Thing"] = field(
+        default=None,
+        metadata={
+            "type": "Element",
+            "required": True,
+        },
+    )
+
+    @dataclass
+    class Thing:
+        ip_address: Optional[str] = field(
+            default=None,
+            metadata={
+                "name": "ipAddress",
+                "type": "Attribute",
+                "required": True,
+            },
+        )
+        port: Optional[int] = field(
+            default=None,
+            metadata={
+                "type": "Attribute",
+                "required": True,
+            },
+        )
+        protocol: Optional[ThingProtocol] = field(
+            default=None,
+            metadata={
+                "type": "Attribute",
+                "required": True,
+            },
+        )
+        nat_ip: Optional[str] = field(
+            default=None,
+            metadata={
+                "name": "natIp",
+                "type": "Attribute",
+            },
+        )
+        delimiter: Optional[str] = field(
+            default=None,
+            metadata={
+                "type": "Attribute",
+                "required": True,
+            },
+        )
 
 
 @dataclass
@@ -793,6 +1078,14 @@ class Channel:
             "type": "Attribute",
         },
     )
+    channel_id: Optional[int] = field(
+        default=None,
+        metadata={
+            "name": "channel.id",
+            "type": "Attribute",
+            "required": True,
+        },
+    )
 
     @dataclass
     class Connection:
@@ -815,6 +1108,24 @@ class Channel:
             },
         )
         ical: Optional[Ical] = field(
+            default=None,
+            metadata={
+                "type": "Element",
+            },
+        )
+        ntp: Optional[object] = field(
+            default=None,
+            metadata={
+                "type": "Element",
+            },
+        )
+        ekey: Optional[object] = field(
+            default=None,
+            metadata={
+                "type": "Element",
+            },
+        )
+        http: Optional[object] = field(
             default=None,
             metadata={
                 "type": "Element",
@@ -873,6 +1184,7 @@ class Device:
         metadata={
             "name": "device.area",
             "type": "Attribute",
+            "required": True,
         },
     )
     device_function: Optional[Function] = field(
@@ -894,6 +1206,7 @@ class Device:
         metadata={
             "name": "device.label",
             "type": "Attribute",
+            "required": True,
         },
     )
     device_name: Optional[str] = field(
@@ -901,6 +1214,22 @@ class Device:
         metadata={
             "name": "device.name",
             "type": "Attribute",
+            "required": True,
+        },
+    )
+    device_specification: Optional[DeviceSpecification] = field(
+        default=None,
+        metadata={
+            "name": "device.specification",
+            "type": "Attribute",
+        },
+    )
+    device_id: Optional[int] = field(
+        default=None,
+        metadata={
+            "name": "device.id",
+            "type": "Attribute",
+            "required": True,
         },
     )
 
@@ -954,6 +1283,30 @@ class Openhab:
         default=None,
         metadata={
             "name": "ical.configuration",
+            "type": "Element",
+            "required": True,
+        },
+    )
+    ntp_configuration: Optional[NtpConfiguration] = field(
+        default=None,
+        metadata={
+            "name": "ntp.configuration",
+            "type": "Element",
+            "required": True,
+        },
+    )
+    ekey_configuration: Optional[EkeyConfiguration] = field(
+        default=None,
+        metadata={
+            "name": "ekey.configuration",
+            "type": "Element",
+            "required": True,
+        },
+    )
+    door_configuration: Optional[DoorConfiguration] = field(
+        default=None,
+        metadata={
+            "name": "door.configuration",
             "type": "Element",
             "required": True,
         },

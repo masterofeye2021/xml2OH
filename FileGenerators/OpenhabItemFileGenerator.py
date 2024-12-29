@@ -75,9 +75,13 @@ class OpenhabItemFileGenerator(OpenhabFileGenerator):
         self.writeGroup(channel,groups)
         self.writeTag(channel)
         if device.device_comm_type == Comm.KNX:
-            self.writeKNXBindingConfiguration(name)
+            self.writeKNXBindingConfiguration(name,device, channel)
         elif device.device_comm_type == Comm.ICAL:
             self.writeICALBindingConfiguration(name)
+        elif device.device_comm_type == Comm.NTP:
+            self.writeNTPBindingConfiguration(name)
+        elif device.device_comm_type == Comm.EKEY:
+            self.writeEKEYBindingConfiguration(channel.name)
         self.file.write("\n")
 
 
@@ -91,7 +95,7 @@ class OpenhabItemFileGenerator(OpenhabFileGenerator):
         if channel.extention:
             name = device.device_area.value + "_" +  channel.access.value+ "_" + device.device_function.value + "_" + channel.extention + "_" +  channel.name 
         else: 
-            name = device.device_area.value + "_" +  channel.access.value+ "_" + device.device_function.value + "_" +  channel.name 
+            name = device.device_area.value + "_" +  channel.access.value+ "_" + device.device_function.value + "_" + channel.name 
         name = name.replace(" ", "_")
         name = name.replace("/", "_")
         name = name.translate(self.umlaut_map)
@@ -101,7 +105,13 @@ class OpenhabItemFileGenerator(OpenhabFileGenerator):
         return name
 
     def writeLabel(self, channel : Channel):
-        self.file.write("\"" + channel.label + "\"")
+
+        if channel.format.name != "ND" and channel.unit.name != "ND":
+            self.file.write("\"" + channel.label + " ["+ channel.format.value+" " + channel.unit.value + "]\" ")
+        elif channel.format.name != "ND":
+            self.file.write("\"" + channel.label + " ["+ channel.format.value + "]\" ")
+        else:
+            self.file.write("\"" + channel.label + "\"")
         self.file.write(" ")
         pass
 
@@ -132,11 +142,17 @@ class OpenhabItemFileGenerator(OpenhabFileGenerator):
         #self.file.write(" ")
         pass
 
-    def writeKNXBindingConfiguration(self,name: str):
+    def writeMetaData(self, device : Device, channel : Channel):
+        #seperator to seperate different 
+        self.file.write(", ")
+        self.file.write("smartux=\"""\" [location=\"" + device.device_area.value + "\"]")
+
+    def writeKNXBindingConfiguration(self,name: str, device : Device, channel : Channel):
         startDel = "{"
         stopDel = "}"
         self.file.write(startDel)
         self.file.write("channel=\"knx:device:bridge:generic:" + name + "\"")
+        self.writeMetaData(device, channel)
         self.file.write(stopDel)
         pass
 
@@ -148,4 +164,19 @@ class OpenhabItemFileGenerator(OpenhabFileGenerator):
         stopDel = "}"
         self.file.write(startDel)
         self.file.write("channel=\"icalendar:eventfilter:"+ name + ":result_0#begin"+ "\"")
+
         self.file.write(stopDel)
+
+    def writeNTPBindingConfiguration(self,name :str):
+        startDel = "{"
+        stopDel = "}"
+        self.file.write(startDel)
+        self.file.write("channel=\"ntp:ntp:master:dateTime"+ "\"")
+        self.file.write(stopDel)
+
+    def writeEKEYBindingConfiguration(self,name :str):
+        startDel = "{"
+        stopDel = "}"
+        self.file.write(startDel)
+        self.file.write("channel=\"ekey:cvlan:master:"+ name + "\"")
+        self.file.write(stopDel)        

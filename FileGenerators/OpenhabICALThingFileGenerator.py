@@ -25,7 +25,7 @@ class OpenhabICALThingFileGenerator(OpenhabFileGenerator):
         self.file.write("url=\"" + ical.bridge.url + "\",")
         self.file.write("\n\t")
 
-        self.file.write("refreshTime=\"" + ical.bridge.refresh_time+ "\",")
+        self.file.write("refreshTime=\"" + str(ical.bridge.refresh_time)+ "\",")
         self.file.write("\n\t")
 
         self.file.write("username=\"" + ical.bridge.username+ "\",")

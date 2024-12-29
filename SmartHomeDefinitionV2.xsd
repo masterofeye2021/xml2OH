@@ -24,6 +24,9 @@
 				<xs:element name="groups" type="groups"/>
 				<xs:element ref="knx.configuration"/>
 				<xs:element ref="ical.configuration"/>
+				<xs:element ref="ntp.configuration"/>
+				<xs:element ref="ekey.configuration"/>
+				<xs:element ref="door.configuration"/>
 			</xs:all>
 		</xs:complexType>
 	</xs:element>
@@ -48,7 +51,11 @@
 				</xs:complexType>
 			</xs:element>
 		</xs:sequence>
-		<xs:attribute name="device.area" type="area" use="required"/>
+		<xs:attribute name="device.area" use="required">
+			<xs:simpleType>
+				<xs:restriction base="area"/>
+			</xs:simpleType>
+		</xs:attribute>
 		<xs:attribute name="device.function">
 			<xs:annotation>
 				<xs:appinfo>
@@ -64,23 +71,20 @@
 		<xs:attribute name="device.comm.type" type="comm" default="KNX"/>
 		<xs:attribute name="device.label" type="xs:string" use="required"/>
 		<xs:attribute name="device.name" type="xs:string" use="required"/>
-		<xs:attribute name="device.specification" use="required">
-			<xs:simpleType>
-				<xs:restriction base="device.specification">
-					<xs:enumeration value="SteinelTruePräsenz"/>
-					<xs:enumeration value="RolladenMDTKNX"/>
-					<xs:enumeration value="ICALBinding"/>
-				</xs:restriction>
-			</xs:simpleType>
-		</xs:attribute>
+		<xs:attribute name="device.specification" type="device.specification"/>
+		<xs:attribute name="device.id" type="xs:int" use="required"/>
 	</xs:complexType>
 	<xs:simpleType name="function">
 		<xs:restriction base="xs:anyURI">
+			<xs:enumeration value="NTP"/>
 			<xs:enumeration value="LIGHT"/>
 			<xs:enumeration value="SHUTTER"/>
 			<xs:enumeration value="SENSOR"/>
 			<xs:enumeration value="PINGDEVICE"/>
 			<xs:enumeration value="CALENDAR"/>
+			<xs:enumeration value="CONTROLUNIT"/>
+			<xs:enumeration value="POWER"/>
+			<xs:enumeration value="DOOR"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="unit">
@@ -90,9 +94,13 @@
 			<xs:enumeration value="K"/>
 			<xs:enumeration value="U"/>
 			<xs:enumeration value="I"/>
-			<xs:enumeration value="%"/>
+			<xs:enumeration value="%%"/>
 			<xs:enumeration value="ppm"/>
 			<xs:enumeration value="hPa"/>
+			<xs:enumeration value="h"/>
+			<xs:enumeration value="W"/>
+			<xs:enumeration value="Wh"/>
+			<xs:enumeration value="mA"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:complexType name="channel">
@@ -105,6 +113,11 @@
 						<xs:element name="ping" type="ping"/>
 						<xs:element name="modbus" type="modbus"/>
 						<xs:element ref="ical"/>
+						<xs:element name="ntp">
+							<xs:complexType/>
+						</xs:element>
+						<xs:element name="ekey"/>
+						<xs:element name="http"/>
 					</xs:choice>
 				</xs:complexType>
 			</xs:element>
@@ -151,6 +164,7 @@
 			<xs:enumeration value="GWC"/>
 			<xs:enumeration value="FLUEG"/>
 			<xs:enumeration value="BUR"/>
+			<xs:enumeration value="ANK"/>
 			<xs:enumeration value="SLZ"/>
 			<xs:enumeration value="BAD"/>
 			<xs:enumeration value="KIZ"/>
@@ -161,7 +175,7 @@
 			<xs:enumeration value="LAG"/>
 			<xs:enumeration value="GAR"/>
 			<xs:enumeration value="CAR"/>
-			<xs:enumeration value=""/>
+			<xs:enumeration value="BSZ"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="icon">
@@ -187,6 +201,14 @@
 			<xs:enumeration value="fa-poo"/>
 			<xs:enumeration value="fa-heat"/>
 			<xs:enumeration value="fa-calendar-day"/>
+			<xs:enumeration value="fa-toggle-on"/>
+			<xs:enumeration value="fa-quote-left"/>
+			<xs:enumeration value="fa-street-view"/>
+			<xs:enumeration value="fa-power-off"/>
+			<xs:enumeration value="fa-ban"/>
+			<xs:enumeration value="fa-timer"/>
+			<xs:enumeration value="fa-plug"/>
+			<xs:enumeration value="fa-utility-pole"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="comm">
@@ -195,6 +217,9 @@
 			<xs:enumeration value="MODBUS"/>
 			<xs:enumeration value="PING"/>
 			<xs:enumeration value="ICAL"/>
+			<xs:enumeration value="NTP"/>
+			<xs:enumeration value="EKEY"/>
+			<xs:enumeration value="HTTP"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:complexType name="knx">
@@ -240,6 +265,7 @@
 			<xs:enumeration value="%.1f"/>
 			<xs:enumeration value="%.2f"/>
 			<xs:enumeration value="ND"/>
+			<xs:enumeration value="%1$td.%1$tm.%1$tY %1$tH:%1$tM"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:complexType name="modbus">
@@ -411,9 +437,111 @@
 	</xs:element>
 	<xs:simpleType name="device.specification">
 		<xs:restriction base="xs:anyURI">
+			<xs:enumeration value="PowerKNX"/>
 			<xs:enumeration value="SteinelTruePräsenz"/>
 			<xs:enumeration value="RolladenMDTKNX"/>
 			<xs:enumeration value="ICALBinding"/>
+			<xs:enumeration value="NTPBinding"/>
+			<xs:enumeration value="LightKNXlight"/>
+			<xs:enumeration value="LightKNXMiddle"/>
+			<xs:enumeration value="LightKNXfull"/>
+			<xs:enumeration value="GlastasterKNX"/>
+			<xs:enumeration value="TuerContactKNX"/>
+			<xs:enumeration value="EKEYDoor"/>
+			<xs:enumeration value="HTTP"/>
 		</xs:restriction>
 	</xs:simpleType>
+	<xs:element name="ntp.configuration">
+		<xs:complexType>
+			<xs:all>
+				<xs:element name="thing">
+					<xs:complexType>
+						<xs:attribute name="hostname" type="xs:string" use="required"/>
+						<xs:attribute name="refreshInterval" type="xs:short" use="required"/>
+						<xs:attribute name="refreshNtp" type="xs:short" use="required"/>
+						<xs:attribute name="serverPort" type="xs:short" use="optional"/>
+						<xs:attribute name="timeZone" type="xs:string" use="optional"/>
+					</xs:complexType>
+				</xs:element>
+			</xs:all>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="ekey.configuration">
+		<xs:complexType>
+			<xs:all>
+				<xs:element name="thing">
+					<xs:complexType>
+						<xs:attribute name="ipAddress" type="xs:string" use="required"/>
+						<xs:attribute name="port" type="xs:int" use="required"/>
+						<xs:attribute name="protocol" use="required">
+							<xs:simpleType>
+								<xs:restriction base="xs:anyURI">
+									<xs:enumeration value="RARE"/>
+									<xs:enumeration value="MULTI"/>
+									<xs:enumeration value="HOME"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="natIp" type="xs:string" use="optional"/>
+						<xs:attribute name="delimiter" type="xs:string" use="required"/>
+					</xs:complexType>
+				</xs:element>
+			</xs:all>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="door.configuration">
+		<xs:complexType>
+			<xs:all>
+				<xs:element name="thing">
+					<xs:complexType>
+						<xs:attribute name="baseURL" type="xs:string" use="required"/>
+						<xs:attribute name="timeout" type="xs:short" use="required"/>
+						<xs:attribute name="refresh" type="xs:short" use="required"/>
+						<xs:attribute name="bufferSize" type="xs:short" default="2048"/>
+						<xs:attribute name="delay" type="xs:short" use="required"/>
+						<xs:attribute name="username" type="xs:string" use="optional"/>
+						<xs:attribute name="password" type="xs:string" use="optional"/>
+						<xs:attribute name="authMode" use="required">
+							<xs:simpleType>
+								<xs:restriction base="xs:anyURI">
+									<xs:enumeration value="BASIC"/>
+									<xs:enumeration value="BASIC_PREEMPTIVE"/>
+									<xs:enumeration value="TOKEN"/>
+									<xs:enumeration value="DIGEST"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="stateMethod" use="required">
+							<xs:simpleType>
+								<xs:restriction base="xs:anyURI">
+									<xs:enumeration value="GET"/>
+									<xs:enumeration value="PUT"/>
+									<xs:enumeration value="POST"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="commandMethod" use="required">
+							<xs:simpleType>
+								<xs:restriction base="xs:anyURI">
+									<xs:enumeration value="GET"/>
+									<xs:enumeration value="PUT"/>
+									<xs:enumeration value="POST"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="contentType" use="optional">
+							<xs:simpleType>
+								<xs:restriction base="xs:string">
+									<xs:enumeration value="PUT"/>
+									<xs:enumeration value="POST"/>
+								</xs:restriction>
+							</xs:simpleType>
+						</xs:attribute>
+						<xs:attribute name="ignoreSSLErrors" type="xs:boolean" use="required"/>
+						<xs:attribute name="strictErrorHandling" type="xs:boolean" use="required"/>
+					</xs:complexType>
+				</xs:element>
+			</xs:all>
+		</xs:complexType>
+	</xs:element>
 </xs:schema>
