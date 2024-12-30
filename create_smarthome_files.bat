@@ -1,0 +1,1 @@
+xsdata .\SmartHomeDefinitionV2.xsd --package smarthome

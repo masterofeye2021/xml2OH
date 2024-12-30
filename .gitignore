@@ -162,3 +162,14 @@ cython_debug/
 #.idea/
 export/items/knx.items
 
+knx_only.xlsx
+export/items/door.items
+export/items/ekey.items
+export/items/ical.items
+export/items/ntp.items
+export/things/door.things
+export/things/ekey.things
+export/things/ical.things
+export/things/knx.things
+export/things/ntp.things
+export/things/knx.things
