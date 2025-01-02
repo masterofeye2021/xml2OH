@@ -1,5 +1,5 @@
 from FileGenerators.OpenhabFileGenerator import OpenhabFileGenerator
-from smarthome import Device, Comm, DoorConfiguration
+from smarthome import Device, Comm, DoorConfiguration, Channel
 import os
 
 
@@ -61,8 +61,43 @@ class OpenhabDoorThingFileGenerator(OpenhabFileGenerator):
             self.file.write( ",")
             self.file.write("password=\"" + door.thing.password + "\"")
             self.file.write("\n\t")
-
-        self.file.write("]")
         
+        self.file.write("] {")
+        self.file.write("\n\t\t")
+
+        self.writeChannel(door,devices)
+
+    def writeChannel(self,door : DoorConfiguration, devices : list[Device]):
+        self.file.write("Channels:")
+        self.file.write("\n\t\t\t")
+
+        for device in devices:
+            if device.device_comm_type == Comm.HTTP :
+                for channel in device.channel:
+                    self.writeChannelType(channel.type_value.value)
+                    self.writeChannelName(device,channel)
+                    self.writeChannelLabel(device,channel)
+                    self.writeMeta(channel)
+                    self.file.write("\n\t\t\t")
+        self.file.write("\n\t")
+        self.file.write("}")
+
+    def writeChannelType(self, type : str):
+        self.file.write("Type " + type.lower())
+
+    def writeChannelName(self, device : Device, channel: Channel):
+        if channel.extention:
+            name = device.device_area.value + "_" +  channel.access.value+ "_" + device.device_function.value + "_" + channel.extention + "_" +  channel.name 
+        else: 
+            name = device.device_area.value + "_" +  channel.access.value+ "_" + device.device_function.value + "_" +  channel.name 
+        name = name.replace(" ", "_")
+        name = name.replace("/", "_")
+
+        self.file.write("\t\t : " + name.translate(self.umlaut_map))
 
 
+    def writeChannelLabel(self, device : Device, channel: Channel):
+        self.file.write("\t\t \"" + channel.name + "\"")
+
+    def writeMeta(self,channel: Channel):
+        self.file.write(" [ stateTransformation=\"JS:check_klingel.js\"]")

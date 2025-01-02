@@ -77,11 +77,13 @@ class OpenhabItemFileGenerator(OpenhabFileGenerator):
         if device.device_comm_type == Comm.KNX:
             self.writeKNXBindingConfiguration(name,device, channel)
         elif device.device_comm_type == Comm.ICAL:
-            self.writeICALBindingConfiguration(name)
+            self.writeICALBindingConfiguration(name,device, channel)
         elif device.device_comm_type == Comm.NTP:
-            self.writeNTPBindingConfiguration(name)
+            self.writeNTPBindingConfiguration(name,device, channel)
         elif device.device_comm_type == Comm.EKEY:
-            self.writeEKEYBindingConfiguration(channel.name)
+            self.writeEKEYBindingConfiguration(channel.name,device, channel)
+        elif device.device_comm_type == Comm.HTTP:
+            self.writeDOORBindingConfiguration(name,device, channel)
         self.file.write("\n")
 
 
@@ -145,7 +147,12 @@ class OpenhabItemFileGenerator(OpenhabFileGenerator):
     def writeMetaData(self, device : Device, channel : Channel):
         #seperator to seperate different 
         self.file.write(", ")
-        self.file.write("smartux=\"""\" [location=\"" + device.device_area.value + "\"]")
+        self.file.write("smartux=\"""\" [location=\"" + device.device_area.value + "\"")
+        
+        if channel.meta:
+            for metadata in channel.meta.meta_attribute:
+                self.file.write("," + metadata.name + "=\"" + metadata.value + "\"")
+        self.file.write("]")
 
     def writeKNXBindingConfiguration(self,name: str, device : Device, channel : Channel):
         startDel = "{"
@@ -156,27 +163,37 @@ class OpenhabItemFileGenerator(OpenhabFileGenerator):
         self.file.write(stopDel)
         pass
 
-    def writeModbusBindingConfiguration(self):
+    def writeModbusBindingConfiguration(self,device : Device, channel : Channel):
         pass
 
-    def writeICALBindingConfiguration(self,name :str):
+    def writeICALBindingConfiguration(self,name :str,device : Device, channel : Channel):
         startDel = "{"
         stopDel = "}"
         self.file.write(startDel)
         self.file.write("channel=\"icalendar:eventfilter:"+ name + ":result_0#begin"+ "\"")
-
+        self.writeMetaData(device, channel)
         self.file.write(stopDel)
 
-    def writeNTPBindingConfiguration(self,name :str):
+    def writeNTPBindingConfiguration(self,name :str,device : Device, channel : Channel):
         startDel = "{"
         stopDel = "}"
         self.file.write(startDel)
         self.file.write("channel=\"ntp:ntp:master:dateTime"+ "\"")
+        self.writeMetaData(device, channel)
         self.file.write(stopDel)
 
-    def writeEKEYBindingConfiguration(self,name :str):
+    def writeEKEYBindingConfiguration(self,name :str,device : Device, channel : Channel):
         startDel = "{"
         stopDel = "}"
         self.file.write(startDel)
         self.file.write("channel=\"ekey:cvlan:master:"+ name + "\"")
-        self.file.write(stopDel)        
+        self.writeMetaData(device, channel)
+        self.file.write(stopDel)
+
+    def writeDOORBindingConfiguration(self,name :str,device : Device, channel : Channel):
+        startDel = "{"
+        stopDel = "}"
+        self.file.write(startDel)
+        self.file.write("channel=\"http:url:door:"+name+"\"")
+        self.writeMetaData(device, channel)
+        self.file.write(stopDel)         

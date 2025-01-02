@@ -54,9 +54,10 @@ class DeviceSpecification(Enum):
     LIGHT_KNXMIDDLE = "LightKNXMiddle"
     LIGHT_KNXFULL = "LightKNXfull"
     GLASTASTER_KNX = "GlastasterKNX"
-    TUER_CONTACT_KNX = "TuerContactKNX"
-    EKEYDOOR = "EKEYDoor"
+    DOOR_EKEY = "DoorEKEY"
     HTTP = "HTTP"
+    DOOR_ACCESS_KNX = "DoorAccessKNX"
+    DOOR_BELL_HTTP = "DoorBellHTTP"
 
 
 class Format(Enum):
@@ -1008,6 +1009,12 @@ class Channel:
             "type": "Element",
         },
     )
+    meta: Optional["Channel.MetaType"] = field(
+        default=None,
+        metadata={
+            "type": "Element",
+        },
+    )
     format: Optional[Format] = field(
         default=None,
         metadata={
@@ -1149,6 +1156,34 @@ class Channel:
                 default=None,
                 metadata={
                     "type": "Attribute",
+                },
+            )
+
+    @dataclass
+    class MetaType:
+        meta_attribute: List["Channel.MetaType.MetaAttribute"] = field(
+            default_factory=list,
+            metadata={
+                "name": "meta.Attribute",
+                "type": "Element",
+                "min_occurs": 1,
+            },
+        )
+
+        @dataclass
+        class MetaAttribute:
+            name: Optional[str] = field(
+                default=None,
+                metadata={
+                    "type": "Attribute",
+                    "required": True,
+                },
+            )
+            value: Optional[str] = field(
+                default=None,
+                metadata={
+                    "type": "Attribute",
+                    "required": True,
                 },
             )
 

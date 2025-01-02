@@ -433,7 +433,7 @@ Bridge knx:ip:bridge [
 			Type contact		 : WOZ_R_LIGHT_Spots_Status__Sperre		 "Status  Sperre"		 [ ga="<8/1/31" ]
 			Type switch		 : WOZ_RW_LIGHT_Spots_Sperre1		 "Sperre1"		 [ ga="8/1/32"]
 			Type switch		 : WOZ_RW_LIGHT_Spots_Sperre2		 "Sperre2"		 [ ga="8/1/33"]
-			Type switch		 : FLUEG_RW_SENSOR_Tuer_oeffner		 "Tür öffner"		 [ ga="12/6/0"]
+			Type switch		 : FLUEG_RW_SENSOR_DoorAccess		 "DoorAccess"		 [ ga="12/6/0"]
 			Type switch		 : HWR_RW_POWER_Waschmaschine_Schalten		 "Schalten"		 [ ga="10/6/0"]
 			Type contact		 : HWR_R_POWER_Waschmaschine_Status		 "Status"		 [ ga="<10/6/1" ]
 			Type switch		 : HWR_RW_POWER_Waschmaschine_Sperren		 "Sperren"		 [ ga="10/6/2"]

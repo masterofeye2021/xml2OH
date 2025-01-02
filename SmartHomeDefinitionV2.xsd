@@ -133,6 +133,18 @@
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="alexa" type="alexa" minOccurs="0"/>
+			<xs:element name="meta" minOccurs="0">
+				<xs:complexType>
+					<xs:sequence maxOccurs="unbounded">
+						<xs:element name="meta.Attribute" maxOccurs="unbounded">
+							<xs:complexType>
+								<xs:attribute name="name" type="xs:string" use="required"/>
+								<xs:attribute name="value" type="xs:string" use="required"/>
+							</xs:complexType>
+						</xs:element>
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
 		</xs:all>
 		<xs:attribute name="format" type="format" use="required"/>
 		<xs:attribute name="unit" type="unit" use="required"/>
@@ -446,9 +458,10 @@
 			<xs:enumeration value="LightKNXMiddle"/>
 			<xs:enumeration value="LightKNXfull"/>
 			<xs:enumeration value="GlastasterKNX"/>
-			<xs:enumeration value="TuerContactKNX"/>
-			<xs:enumeration value="EKEYDoor"/>
+			<xs:enumeration value="DoorEKEY"/>
 			<xs:enumeration value="HTTP"/>
+			<xs:enumeration value="DoorAccessKNX"/>
+			<xs:enumeration value="DoorBellHTTP"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:element name="ntp.configuration">
