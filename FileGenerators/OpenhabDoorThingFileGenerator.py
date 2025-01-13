@@ -100,4 +100,6 @@ class OpenhabDoorThingFileGenerator(OpenhabFileGenerator):
         self.file.write("\t\t \"" + channel.name + "\"")
 
     def writeMeta(self,channel: Channel):
-        self.file.write(" [ stateTransformation=\"JS:check_klingel.js\"]")
+        self.file.write(" [ stateTransformation=\"JS:check_klingel.js\"")
+        self.file.write(", openValue=\"OPEN\"")
+        self.file.write(", closedValue=\"CLOSED\"]")

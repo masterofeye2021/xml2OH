@@ -73,6 +73,7 @@
 		<xs:attribute name="device.name" type="xs:string" use="required"/>
 		<xs:attribute name="device.specification" type="device.specification"/>
 		<xs:attribute name="device.id" type="xs:int" use="required"/>
+		<xs:attribute name="enable" type="xs:boolean" use="required"/>
 	</xs:complexType>
 	<xs:simpleType name="function">
 		<xs:restriction base="xs:anyURI">
@@ -118,6 +119,7 @@
 						</xs:element>
 						<xs:element name="ekey"/>
 						<xs:element name="http"/>
+						<xs:element name="internal"/>
 					</xs:choice>
 				</xs:complexType>
 			</xs:element>
@@ -166,6 +168,7 @@
 		<xs:restriction base="xs:anyURI">
 			<xs:enumeration value="R"/>
 			<xs:enumeration value="RW"/>
+			<xs:enumeration value="W"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="area">
@@ -251,6 +254,7 @@
 						<xs:element name="sub" type="xs:short"/>
 					</xs:all>
 					<xs:attribute name="is.readable" type="xs:boolean" default="false"/>
+					<xs:attribute name="dpt" type="xs:string"/>
 				</xs:complexType>
 			</xs:element>
 			<xs:element name="listening.ga" minOccurs="0">
@@ -261,6 +265,7 @@
 						<xs:element name="sub" type="xs:short"/>
 					</xs:all>
 					<xs:attribute name="is.readable" type="xs:boolean" default="true"/>
+					<xs:attribute name="dpt" type="xs:string"/>
 				</xs:complexType>
 			</xs:element>
 		</xs:all>
