@@ -1,0 +1,3 @@
+
+
+Contact  HWR_R_DOOR_Door_Bell "Türklingel Status" <fa-lightbulb> (HWR) {channel="http:url:door:HWR_R_DOOR_Door_Bell", smartux="" [location="HWR"]}
