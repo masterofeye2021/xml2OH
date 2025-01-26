@@ -118,7 +118,7 @@ class OpenhabKNXThingFileGenerator(OpenhabFileGenerator):
         address = knxAdress.build()
 
 
-        if channel.type_value == TypeValue.NUMBER or channel.type_value == TypeValue.STRING or channel.type_value == TypeValue.SWITCH or channel.type_value == TypeValue.CONTACT:
+        if channel.type_value == TypeValue.NUMBER or channel.type_value == TypeValue.STRING or channel.type_value == TypeValue.SWITCH or channel.type_value == TypeValue.CONTACT or channel.type_value == TypeValue.DATE_TIME or channel.type_value == TypeValue.DATETIME_CONTROL:
             self.file.write("\t\t [" + address + "]")
 
         if channel.type_value == TypeValue.ROLLERSHUTTER:

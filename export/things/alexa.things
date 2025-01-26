@@ -1,0 +1,8 @@
+Bridge amazonechocontrol:account:ivo  "Amazon Account" @ "Accounts" [
+	discoverSmartHome=0,
+	pollingIntervalSmartHomeAlexa=30,
+	pollingIntervalSmartSkills=120
+	] {
+		Thing echo KUE_ALEXA_Alexa_Kueche [serialNumber="G2A0P3077407051D" ]
+		Thing echo BUR_ALEXA_Alexa_Buero [serialNumber="G8M2DB0643560Q66" ]
+		}

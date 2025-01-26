@@ -9,8 +9,10 @@
 				<xs:enumeration value="Rollershutter"/>
 				<xs:enumeration value="Contact"/>
 				<xs:enumeration value="DateTime"/>
+				<xs:enumeration value="Datetime-Control"/>
 				<xs:enumeration value="String"/>
 				<xs:enumeration value="Dimmer"/>
+				<xs:enumeration value="Player"/>
 			</xs:restriction>
 		</xs:simpleType>
 	</xs:attribute>
@@ -27,6 +29,15 @@
 				<xs:element ref="ntp.configuration"/>
 				<xs:element ref="ekey.configuration"/>
 				<xs:element ref="door.configuration"/>
+				<xs:element name="definition">
+					<xs:complexType>
+						<xs:sequence>
+							<xs:element ref="area.map"/>
+							<xs:element ref="idm.map" maxOccurs="unbounded"/>
+						</xs:sequence>
+					</xs:complexType>
+				</xs:element>
+				<xs:element ref="alexa.configuration"/>
 			</xs:all>
 		</xs:complexType>
 	</xs:element>
@@ -71,7 +82,11 @@
 		<xs:attribute name="device.comm.type" type="comm" default="KNX"/>
 		<xs:attribute name="device.label" type="xs:string" use="required"/>
 		<xs:attribute name="device.name" type="xs:string" use="required"/>
-		<xs:attribute name="device.specification" type="device.specification"/>
+		<xs:attribute name="device.specification">
+			<xs:simpleType>
+				<xs:restriction base="device.specification"/>
+			</xs:simpleType>
+		</xs:attribute>
 		<xs:attribute name="device.id" type="xs:int" use="required"/>
 		<xs:attribute name="enable" type="xs:boolean" use="required"/>
 	</xs:complexType>
@@ -86,6 +101,7 @@
 			<xs:enumeration value="CONTROLUNIT"/>
 			<xs:enumeration value="POWER"/>
 			<xs:enumeration value="DOOR"/>
+			<xs:enumeration value="ALEXA"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="unit">
@@ -100,7 +116,9 @@
 			<xs:enumeration value="hPa"/>
 			<xs:enumeration value="h"/>
 			<xs:enumeration value="W"/>
+			<xs:enumeration value="kW"/>
 			<xs:enumeration value="Wh"/>
+			<xs:enumeration value="kWh"/>
 			<xs:enumeration value="mA"/>
 		</xs:restriction>
 	</xs:simpleType>
@@ -120,6 +138,7 @@
 						<xs:element name="ekey"/>
 						<xs:element name="http"/>
 						<xs:element name="internal"/>
+						<xs:element ref="alexa.communication"/>
 					</xs:choice>
 				</xs:complexType>
 			</xs:element>
@@ -145,6 +164,11 @@
 							</xs:complexType>
 						</xs:element>
 					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="mapref" minOccurs="0">
+				<xs:complexType>
+					<xs:attribute name="refid2" type="xs:IDREF"/>
 				</xs:complexType>
 			</xs:element>
 		</xs:all>
@@ -191,6 +215,7 @@
 			<xs:enumeration value="GAR"/>
 			<xs:enumeration value="CAR"/>
 			<xs:enumeration value="BSZ"/>
+			<xs:enumeration value="ZEN"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="icon">
@@ -224,6 +249,7 @@
 			<xs:enumeration value="fa-timer"/>
 			<xs:enumeration value="fa-plug"/>
 			<xs:enumeration value="fa-utility-pole"/>
+			<xs:enumeration value="fa-circle-exclamation"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="comm">
@@ -235,6 +261,7 @@
 			<xs:enumeration value="NTP"/>
 			<xs:enumeration value="EKEY"/>
 			<xs:enumeration value="HTTP"/>
+			<xs:enumeration value="ALEXA"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:complexType name="knx">
@@ -283,6 +310,7 @@
 			<xs:enumeration value="%.2f"/>
 			<xs:enumeration value="ND"/>
 			<xs:enumeration value="%1$td.%1$tm.%1$tY %1$tH:%1$tM"/>
+			<xs:enumeration value="%s"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:complexType name="modbus">
@@ -467,6 +495,9 @@
 			<xs:enumeration value="HTTP"/>
 			<xs:enumeration value="DoorAccessKNX"/>
 			<xs:enumeration value="DoorBellHTTP"/>
+			<xs:enumeration value="TimeKNX"/>
+			<xs:enumeration value="IDMKNX"/>
+			<xs:enumeration value="Alexa"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:element name="ntp.configuration">
@@ -562,4 +593,73 @@
 			</xs:all>
 		</xs:complexType>
 	</xs:element>
+	<xs:element name="area.map">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="param" type="param" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:complexType name="param">
+		<xs:attribute name="short" type="xs:string" use="required"/>
+		<xs:attribute name="long" type="xs:string" use="required"/>
+	</xs:complexType>
+	<xs:element name="idm.map">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="param" type="param" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:attribute name="name" type="xs:string" use="required"/>
+			<xs:attribute name="id" type="xs:ID" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="alexa.configuration">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="bridge">
+					<xs:complexType>
+						<xs:attribute name="discoverSmartHome" type="xs:short" use="required"/>
+						<xs:attribute name="pollingIntervalSmartHomeAlexa" type="xs:short" use="required"/>
+						<xs:attribute name="pollingIntervalSmartSkills" type="xs:short" use="required"/>
+					</xs:complexType>
+				</xs:element>
+				<xs:element name="thing" maxOccurs="unbounded">
+					<xs:complexType>
+						<xs:attribute name="serial" type="xs:string" use="required"/>
+						<xs:attribute name="deviceid" type="xs:short" use="required"/>
+						<xs:attribute name="type" type="alexa.device.type" use="required"/>
+					</xs:complexType>
+				</xs:element>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="alexa.communication">
+		<xs:complexType>
+			<xs:attribute name="device.type" use="required">
+				<xs:simpleType>
+					<xs:restriction base="xs:anyURI">
+						<xs:enumeration value="echo"/>
+						<xs:enumeration value="echospot"/>
+						<xs:enumeration value="echoshow"/>
+						<xs:enumeration value="wha"/>
+						<xs:enumeration value="flashbriefingprofile"/>
+						<xs:enumeration value="smartHomeDevice"/>
+						<xs:enumeration value="smartHomeDeviceGroup"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="device.channel" type="xs:string" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:simpleType name="alexa.device.type">
+		<xs:restriction base="xs:anyURI">
+			<xs:enumeration value="echo"/>
+			<xs:enumeration value="echospot"/>
+			<xs:enumeration value="echoshow"/>
+			<xs:enumeration value="wha"/>
+			<xs:enumeration value="flashbriefingprofile"/>
+			<xs:enumeration value="smartHomeDevice"/>
+			<xs:enumeration value="smartHomeDeviceGroup"/>
+		</xs:restriction>
+	</xs:simpleType>
 </xs:schema>

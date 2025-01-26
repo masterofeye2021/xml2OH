@@ -9,6 +9,26 @@ class Access(Enum):
     W = "W"
 
 
+class AlexaDeviceType1(Enum):
+    ECHO = "echo"
+    ECHOSPOT = "echospot"
+    ECHOSHOW = "echoshow"
+    WHA = "wha"
+    FLASHBRIEFINGPROFILE = "flashbriefingprofile"
+    SMART_HOME_DEVICE = "smartHomeDevice"
+    SMART_HOME_DEVICE_GROUP = "smartHomeDeviceGroup"
+
+
+class AlexaDeviceType2(Enum):
+    ECHO = "echo"
+    ECHOSPOT = "echospot"
+    ECHOSHOW = "echoshow"
+    WHA = "wha"
+    FLASHBRIEFINGPROFILE = "flashbriefingprofile"
+    SMART_HOME_DEVICE = "smartHomeDevice"
+    SMART_HOME_DEVICE_GROUP = "smartHomeDeviceGroup"
+
+
 class AlexaInverted(Enum):
     TRUE = "true"
     FALSE = "false"
@@ -33,6 +53,7 @@ class Area(Enum):
     GAR = "GAR"
     CAR = "CAR"
     BSZ = "BSZ"
+    ZEN = "ZEN"
 
 
 class Comm(Enum):
@@ -43,6 +64,7 @@ class Comm(Enum):
     NTP = "NTP"
     EKEY = "EKEY"
     HTTP = "HTTP"
+    ALEXA = "ALEXA"
 
 
 class DeviceSpecification(Enum):
@@ -59,6 +81,9 @@ class DeviceSpecification(Enum):
     HTTP = "HTTP"
     DOOR_ACCESS_KNX = "DoorAccessKNX"
     DOOR_BELL_HTTP = "DoorBellHTTP"
+    TIME_KNX = "TimeKNX"
+    IDMKNX = "IDMKNX"
+    ALEXA = "Alexa"
 
 
 class Format(Enum):
@@ -67,6 +92,7 @@ class Format(Enum):
     VALUE_2F = "%.2f"
     ND = "ND"
     VALUE_1_TD_1_TM_1_T_Y_1_T_H_1_T_M = "%1$td.%1$tm.%1$tY %1$tH:%1$tM"
+    S = "%s"
 
 
 class Function(Enum):
@@ -79,6 +105,7 @@ class Function(Enum):
     CONTROLUNIT = "CONTROLUNIT"
     POWER = "POWER"
     DOOR = "DOOR"
+    ALEXA = "ALEXA"
 
 
 class GroupFunction(Enum):
@@ -192,6 +219,7 @@ class Icon(Enum):
     FA_TIMER = "fa-timer"
     FA_PLUG = "fa-plug"
     FA_UTILITY_POLE = "fa-utility-pole"
+    FA_CIRCLE_EXCLAMATION = "fa-circle-exclamation"
 
 
 @dataclass
@@ -464,6 +492,27 @@ class NtpConfiguration:
 
 
 @dataclass
+class Param:
+    class Meta:
+        name = "param"
+
+    short: Optional[str] = field(
+        default=None,
+        metadata={
+            "type": "Attribute",
+            "required": True,
+        },
+    )
+    long: Optional[str] = field(
+        default=None,
+        metadata={
+            "type": "Attribute",
+            "required": True,
+        },
+    )
+
+
+@dataclass
 class Ping:
     class Meta:
         name = "ping"
@@ -520,8 +569,10 @@ class TypeValue(Enum):
     ROLLERSHUTTER = "Rollershutter"
     CONTACT = "Contact"
     DATE_TIME = "DateTime"
+    DATETIME_CONTROL = "Datetime-Control"
     STRING = "String"
     DIMMER = "Dimmer"
+    PLAYER = "Player"
 
 
 class Unit(Enum):
@@ -535,12 +586,110 @@ class Unit(Enum):
     H_PA = "hPa"
     H = "h"
     W = "W"
+    K_W = "kW"
     WH = "Wh"
+    K_WH = "kWh"
     M_A = "mA"
 
 
 @dataclass
 class Alexa:
+    class Meta:
+        name = "alexa"
+
+    device_type: Optional[AlexaDeviceType2] = field(
+        default=None,
+        metadata={
+            "name": "device.type",
+            "type": "Attribute",
+            "required": True,
+        },
+    )
+    device_channel: Optional[str] = field(
+        default=None,
+        metadata={
+            "name": "device.channel",
+            "type": "Attribute",
+            "required": True,
+        },
+    )
+
+
+@dataclass
+class AlexaConfiguration:
+    class Meta:
+        name = "alexa.configuration"
+
+    bridge: Optional["AlexaConfiguration.Bridge"] = field(
+        default=None,
+        metadata={
+            "type": "Element",
+            "required": True,
+        },
+    )
+    thing: List["AlexaConfiguration.Thing"] = field(
+        default_factory=list,
+        metadata={
+            "type": "Element",
+            "min_occurs": 1,
+        },
+    )
+
+    @dataclass
+    class Bridge:
+        discover_smart_home: Optional[int] = field(
+            default=None,
+            metadata={
+                "name": "discoverSmartHome",
+                "type": "Attribute",
+                "required": True,
+            },
+        )
+        polling_interval_smart_home_alexa: Optional[int] = field(
+            default=None,
+            metadata={
+                "name": "pollingIntervalSmartHomeAlexa",
+                "type": "Attribute",
+                "required": True,
+            },
+        )
+        polling_interval_smart_skills: Optional[int] = field(
+            default=None,
+            metadata={
+                "name": "pollingIntervalSmartSkills",
+                "type": "Attribute",
+                "required": True,
+            },
+        )
+
+    @dataclass
+    class Thing:
+        serial: Optional[str] = field(
+            default=None,
+            metadata={
+                "type": "Attribute",
+                "required": True,
+            },
+        )
+        deviceid: Optional[int] = field(
+            default=None,
+            metadata={
+                "type": "Attribute",
+                "required": True,
+            },
+        )
+        type_value: Optional[AlexaDeviceType1] = field(
+            default=None,
+            metadata={
+                "name": "type",
+                "type": "Attribute",
+                "required": True,
+            },
+        )
+
+
+@dataclass
+class Alexa1:
     class Meta:
         name = "alexa"
 
@@ -603,6 +752,20 @@ class Alexa:
         default=None,
         metadata={
             "type": "Attribute",
+        },
+    )
+
+
+@dataclass
+class AreaMap:
+    class Meta:
+        name = "area.map"
+
+    param: List[Param] = field(
+        default_factory=list,
+        metadata={
+            "type": "Element",
+            "min_occurs": 1,
         },
     )
 
@@ -909,6 +1072,34 @@ class Ical:
 
 
 @dataclass
+class IdmMap:
+    class Meta:
+        name = "idm.map"
+
+    param: List[Param] = field(
+        default_factory=list,
+        metadata={
+            "type": "Element",
+            "min_occurs": 1,
+        },
+    )
+    name: Optional[str] = field(
+        default=None,
+        metadata={
+            "type": "Attribute",
+            "required": True,
+        },
+    )
+    id: Optional[str] = field(
+        default=None,
+        metadata={
+            "type": "Attribute",
+            "required": True,
+        },
+    )
+
+
+@dataclass
 class Knx:
     class Meta:
         name = "knx"
@@ -1023,6 +1214,12 @@ class Channel:
         },
     )
     meta: Optional["Channel.MetaType"] = field(
+        default=None,
+        metadata={
+            "type": "Element",
+        },
+    )
+    mapref: Optional["Channel.Mapref"] = field(
         default=None,
         metadata={
             "type": "Element",
@@ -1157,6 +1354,12 @@ class Channel:
                 "type": "Element",
             },
         )
+        alexa: Optional[Alexa] = field(
+            default=None,
+            metadata={
+                "type": "Element",
+            },
+        )
 
     @dataclass
     class Groups:
@@ -1205,6 +1408,15 @@ class Channel:
                     "required": True,
                 },
             )
+
+    @dataclass
+    class Mapref:
+        refid2: Optional[str] = field(
+            default=None,
+            metadata={
+                "type": "Attribute",
+            },
+        )
 
 
 @dataclass
@@ -1372,3 +1584,37 @@ class Openhab:
             "required": True,
         },
     )
+    definition: Optional["Openhab.Definition"] = field(
+        default=None,
+        metadata={
+            "type": "Element",
+            "required": True,
+        },
+    )
+    alexa_configuration: Optional[AlexaConfiguration] = field(
+        default=None,
+        metadata={
+            "name": "alexa.configuration",
+            "type": "Element",
+            "required": True,
+        },
+    )
+
+    @dataclass
+    class Definition:
+        area_map: Optional[AreaMap] = field(
+            default=None,
+            metadata={
+                "name": "area.map",
+                "type": "Element",
+                "required": True,
+            },
+        )
+        idm_map: List[IdmMap] = field(
+            default_factory=list,
+            metadata={
+                "name": "idm.map",
+                "type": "Element",
+                "min_occurs": 1,
+            },
+        )

@@ -28,7 +28,8 @@ class OpenhabItemFileGenerator(OpenhabFileGenerator):
         for device in devices:
             if device.enable == True:
                 for channel in device.channel:
-                    self.writeRow(device,channel, groups)
+                    if channel.enable == True:
+                        self.writeRow(device,channel, groups)
                 
         # Close the handle independent what happened
         self.file.close()
@@ -76,7 +77,9 @@ class OpenhabItemFileGenerator(OpenhabFileGenerator):
         self.writeGroup(channel,groups)
         self.writeTag(channel)
         if device.device_comm_type == Comm.KNX:
-            if channel.connection.knx:
+            if channel.type_value == channel.type_value.DATETIME_CONTROL:
+                self.writeKNXDateTimeBindingConfiguration(name,device, channel) 
+            elif channel.connection.knx:
                 self.writeKNXBindingConfiguration(name,device, channel) 
         elif device.device_comm_type == Comm.ICAL:
             self.writeICALBindingConfiguration(name,device, channel)
@@ -86,13 +89,18 @@ class OpenhabItemFileGenerator(OpenhabFileGenerator):
             self.writeEKEYBindingConfiguration(channel.name,device, channel)
         elif device.device_comm_type == Comm.HTTP:
             self.writeDOORBindingConfiguration(name,device, channel)
+        elif device.device_comm_type == Comm.ALEXA:
+             self.writeAlexaBindingConfiguration(name,device, channel)
         self.file.write("\n")
 
 
 
 
     def writeType(self,channel : Channel):
-        self.file.write(channel.type_value.value + " ")
+        if channel.type_value == channel.type_value.DATETIME_CONTROL:
+            self.file.write("DateTime" + " ")
+        else:
+            self.file.write(channel.type_value.value + " ")
         self.file.write(" ")
 
     def writeName(self, device : Device, channel : Channel):
@@ -168,6 +176,16 @@ class OpenhabItemFileGenerator(OpenhabFileGenerator):
         self.file.write(stopDel)
         pass
 
+
+    def writeKNXDateTimeBindingConfiguration(self,name: str, device : Device, channel : Channel):
+        startDel = "{"
+        stopDel = "}"
+        self.file.write(startDel)
+        self.file.write("channel=\"knx:device:bridge:generic:" + name + "\", channel=\"ntp:ntp:master:dateTime\"")
+        self.writeMetaData(device, channel)
+        self.file.write(stopDel)
+        pass
+
     def writeModbusBindingConfiguration(self,device : Device, channel : Channel):
         pass
 
@@ -202,3 +220,19 @@ class OpenhabItemFileGenerator(OpenhabFileGenerator):
         self.file.write("channel=\"http:url:door:"+name+"\"")
         self.writeMetaData(device, channel)
         self.file.write(stopDel)
+
+    def writeAlexaBindingConfiguration(self,name :str,device : Device, channel : Channel):
+        startDel = "{"
+        stopDel = "}"
+        self.file.write(startDel)
+        name = device.device_area.value + "_"  + device.device_function.value + "_" +  device.device_name
+        name = name.replace(" ", "_")
+        name = name.replace("/", "_")
+        name.translate(self.umlaut_map)
+
+
+        self.file.write("channel=\"amazonechocontrol:echo:ivo:"+ name+ ":" +channel.connection.alexa.device_channel+"\"")
+        self.writeMetaData(device, channel)
+        self.file.write(stopDel)
+
+
