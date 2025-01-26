@@ -14459,7 +14459,7 @@
 					<group.ref refid="HWR"/>
 				</groups>
 			</channel>
-			<channel format="ND" unit="ND" access="R" icon="fa-lightbulb" enable="true" persistence="true" label="Finger ID" type="Number" name="fingerId" channel.id="2">
+			<channel format="ND" unit="ND" access="R" icon="fa-lightbulb" enable="true" persistence="true" label="Finger ID" type="Number" name="fingerId" channel.id="3">
 				<link>HWR_R_DOOR_fingerId</link>
 				<connection>
 					<ekey>text</ekey>
@@ -14468,7 +14468,7 @@
 					<group.ref refid="HWR"/>
 				</groups>
 			</channel>
-			<channel format="ND" unit="ND" access="R" icon="fa-lightbulb" enable="true" persistence="true" label="Relay ID" type="Number" name="relayId" channel.id="2">
+			<channel format="ND" unit="ND" access="R" icon="fa-lightbulb" enable="true" persistence="true" label="Relay ID" type="Number" name="relayId" channel.id="4">
 				<link>HWR_R_DOOR_relayId</link>
 				<connection>
 					<ekey>text</ekey>
@@ -14477,7 +14477,7 @@
 					<group.ref refid="HWR"/>
 				</groups>
 			</channel>
-			<channel format="ND" unit="ND" access="R" icon="fa-lightbulb" enable="true" persistence="true" label="Serialnumber" type="Number" name="fsSerial" channel.id="2">
+			<channel format="ND" unit="ND" access="R" icon="fa-lightbulb" enable="true" persistence="true" label="Serialnumber" type="Number" name="fsSerial" channel.id="5">
 				<link>HWR_R_DOOR_fsSerial</link>
 				<connection>
 					<ekey>text</ekey>
@@ -14486,7 +14486,7 @@
 					<group.ref refid="HWR"/>
 				</groups>
 			</channel>
-			<channel format="ND" unit="ND" access="R" icon="fa-lightbulb" enable="true" persistence="true" label="Terminal ID" type="Number" name="termId" channel.id="2">
+			<channel format="ND" unit="ND" access="R" icon="fa-lightbulb" enable="true" persistence="true" label="Terminal ID" type="Number" name="termId" channel.id="6">
 				<link>HWR_R_DOOR_termId</link>
 				<connection>
 					<ekey>text</ekey>
@@ -14495,7 +14495,7 @@
 					<group.ref refid="HWR"/>
 				</groups>
 			</channel>
-			<channel format="ND" unit="ND" access="R" icon="fa-lightbulb" enable="true" persistence="true" label="Event ID" type="Number" name="event" channel.id="2">
+			<channel format="ND" unit="ND" access="R" icon="fa-lightbulb" enable="true" persistence="true" label="Event ID" type="Number" name="event" channel.id="7">
 				<link>HWR_R_DOOR_event</link>
 				<connection>
 					<ekey>text</ekey>
@@ -17224,7 +17224,7 @@
 			<channel format="ND" unit="ND" access="R" icon="fa-lightbulb" enable="true" persistence="false" label="Alexa Player für die Küche" type="Player" name="Alexa Player" channel.id="1">
 				<link>KUE_R_ALEXA_Alexa_Player</link>
 				<connection>
-					<alexa device.type="echo" device.channel="player"/>
+					<alexa.communication device.type="echo" device.channel="String"/>
 				</connection>
 				<groups>
 					<group.ref refid="Alexa"/>
@@ -17234,7 +17234,7 @@
 			<channel format="%.0f" unit="ND" access="RW" icon="fa-lightbulb" enable="true" persistence="false" label="Alexa Player Lautstärke " type="Dimmer" name="Alexa Player Volume" channel.id="2">
 				<link>KUE_RW_ALEXA_Alexa_Player_Volume</link>
 				<connection>
-					<alexa device.type="echo" device.channel="volume"/>
+					<alexa.communication device.type="echo" device.channel="String"/>
 				</connection>
 				<groups>
 					<group.ref refid="Alexa"/>
@@ -17244,7 +17244,7 @@
 			<channel format="ND" unit="ND" access="RW" icon="fa-lightbulb" enable="true" persistence="false" label="Spielt Alarm Sound ab" type="String" name="Play Alarm" channel.id="3">
 				<link>KUE_RW_ALEXA_Play_Alarm</link>
 				<connection>
-					<alexa device.type="echo" device.channel="playAlarmSound"/>
+					<alexa.communication device.type="echo" device.channel="String"/>
 				</connection>
 				<groups>
 					<group.ref refid="Alexa"/>
@@ -17254,7 +17254,7 @@
 			<channel format="%s" unit="ND" access="W" icon="fa-lightbulb" enable="true" persistence="false" label="Spielt bestimmten Titel ab " type="String" name="Play Music" channel.id="4">
 				<link>KUE_W_ALEXA_Play_Music</link>
 				<connection>
-					<alexa device.type="echo" device.channel="playMusicVoiceCommand"/>
+					<alexa.communication device.type="echo" device.channel="String"/>
 				</connection>
 				<groups>
 					<group.ref refid="Alexa"/>
@@ -17264,7 +17264,7 @@
 			<channel format="%s" unit="ND" access="W" icon="fa-lightbulb" enable="true" persistence="false" label="Startet Kommando" type="String" name="Start Commando" channel.id="5">
 				<link>KUE_W_ALEXA_Start_Commando</link>
 				<connection>
-					<alexa device.type="echo" device.channel="textCommand"/>
+					<alexa.communication device.type="echo" device.channel="String"/>
 				</connection>
 				<groups>
 					<group.ref refid="Alexa"/>
@@ -17274,7 +17274,7 @@
 			<channel format="%s" unit="ND" access="W" icon="fa-lightbulb" enable="true" persistence="false" label="TTS" type="String" name="TTS" channel.id="6">
 				<link>KUE_W_ALEXA_TTS</link>
 				<connection>
-					<alexa device.type="echo" device.channel="textToSpeech"/>
+					<alexa.communication device.type="echo" device.channel="String"/>
 				</connection>
 				<groups>
 					<group.ref refid="Alexa"/>
@@ -17284,7 +17284,7 @@
 			<channel format="%.0f" unit="ND" access="W" icon="fa-lightbulb" enable="true" persistence="false" label="TTS Lautstärke" type="Dimmer" name="TTS Volume" channel.id="7">
 				<link>KUE_W_ALEXA_TTS_Volume</link>
 				<connection>
-					<alexa device.type="echo" device.channel="textToSpeechVolume"/>
+					<alexa.communication device.type="echo" device.channel="String"/>
 				</connection>
 				<groups>
 					<group.ref refid="Alexa"/>
@@ -17294,7 +17294,7 @@
 			<channel format="%s" unit="ND" access="RW" icon="fa-lightbulb" enable="true" persistence="false" label="Letztes Sprach Kommando " type="String" name="TTS Volume" channel.id="8">
 				<link>KUE_RW_ALEXA_TTS_Volume</link>
 				<connection>
-					<alexa device.type="echo" device.channel="lastVoiceCommand"/>
+					<alexa.communication device.type="echo" device.channel="String"/>
 				</connection>
 				<groups>
 					<group.ref refid="Alexa"/>
@@ -17304,7 +17304,7 @@
 			<channel format="%.0f" unit="ND" access="R" icon="fa-lightbulb" enable="true" persistence="false" label="Lautstärke für Benachrichtigungen" type="String" name="Notification Volume" channel.id="9">
 				<link>KUE_R_ALEXA_Notification_Volume</link>
 				<connection>
-					<alexa device.type="echo" device.channel="notificationVolume"/>
+					<alexa.communication device.type="echo" device.channel="String"/>
 				</connection>
 				<groups>
 					<group.ref refid="Alexa"/>
@@ -17316,7 +17316,7 @@
 			<channel format="ND" unit="ND" access="R" icon="fa-lightbulb" enable="true" persistence="false" label="Alexa Player für die Küche" type="Player" name="Alexa Player" channel.id="1">
 				<link>BUR_R_ALEXA_Alexa_Player</link>
 				<connection>
-					<alexa device.type="echo" device.channel="player"/>
+					<alexa.communication device.type="echo" device.channel="player"/>
 				</connection>
 				<groups>
 					<group.ref refid="Alexa"/>
@@ -17326,7 +17326,7 @@
 			<channel format="%.0f" unit="ND" access="RW" icon="fa-lightbulb" enable="true" persistence="false" label="Alexa Player Lautstärke " type="Dimmer" name="Alexa Player Volume" channel.id="2">
 				<link>BUR_RW_ALEXA_Alexa_Player_Volume</link>
 				<connection>
-					<alexa device.type="echo" device.channel="volume"/>
+					<alexa.communication device.type="echo" device.channel="volume"/>
 				</connection>
 				<groups>
 					<group.ref refid="Alexa"/>
@@ -17336,7 +17336,7 @@
 			<channel format="ND" unit="ND" access="RW" icon="fa-lightbulb" enable="true" persistence="false" label="Spielt Alarm Sound ab" type="String" name="Play Alarm" channel.id="3">
 				<link>BUR_RW_ALEXA_Play_Alarm</link>
 				<connection>
-					<alexa device.type="echo" device.channel="playAlarmSound"/>
+					<alexa.communication device.type="echo" device.channel="playAlarmSound"/>
 				</connection>
 				<groups>
 					<group.ref refid="Alexa"/>
@@ -17346,7 +17346,7 @@
 			<channel format="%s" unit="ND" access="W" icon="fa-lightbulb" enable="true" persistence="false" label="Spielt bestimmten Titel ab " type="String" name="Play Music" channel.id="4">
 				<link>BUR_W_ALEXA_Play_Music</link>
 				<connection>
-					<alexa device.type="echo" device.channel="playMusicVoiceCommand"/>
+					<alexa.communication device.type="echo" device.channel="playMusicVoiceCommand"/>
 				</connection>
 				<groups>
 					<group.ref refid="Alexa"/>
@@ -17356,7 +17356,7 @@
 			<channel format="%s" unit="ND" access="W" icon="fa-lightbulb" enable="true" persistence="false" label="Startet Kommando" type="String" name="Start Commando" channel.id="5">
 				<link>BUR_W_ALEXA_Start_Commando</link>
 				<connection>
-					<alexa device.type="echo" device.channel="textCommand"/>
+					<alexa.communication device.type="echo" device.channel="textCommand"/>
 				</connection>
 				<groups>
 					<group.ref refid="Alexa"/>
@@ -17366,7 +17366,7 @@
 			<channel format="%s" unit="ND" access="W" icon="fa-lightbulb" enable="true" persistence="false" label="TTS" type="String" name="TTS" channel.id="6">
 				<link>BUR_W_ALEXA_TTS</link>
 				<connection>
-					<alexa device.type="echo" device.channel="textToSpeech"/>
+					<alexa.communication device.type="echo" device.channel="textToSpeech"/>
 				</connection>
 				<groups>
 					<group.ref refid="Alexa"/>
@@ -17376,7 +17376,7 @@
 			<channel format="%.0f" unit="ND" access="W" icon="fa-lightbulb" enable="true" persistence="false" label="TTS Lautstärke" type="Dimmer" name="TTS Volume" channel.id="7">
 				<link>BUR_W_ALEXA_TTS_Volume</link>
 				<connection>
-					<alexa device.type="echo" device.channel="textToSpeechVolume"/>
+					<alexa.communication device.type="echo" device.channel="textToSpeechVolume"/>
 				</connection>
 				<groups>
 					<group.ref refid="Alexa"/>
@@ -17386,7 +17386,7 @@
 			<channel format="%s" unit="ND" access="RW" icon="fa-lightbulb" enable="true" persistence="false" label="Letztes Sprach Kommando " type="String" name="TTS Volume" channel.id="8">
 				<link>BUR_RW_ALEXA_TTS_Volume</link>
 				<connection>
-					<alexa device.type="echo" device.channel="lastVoiceCommand"/>
+					<alexa.communication device.type="echo" device.channel="lastVoiceCommand"/>
 				</connection>
 				<groups>
 					<group.ref refid="Alexa"/>
@@ -17396,7 +17396,7 @@
 			<channel format="%.0f" unit="ND" access="R" icon="fa-lightbulb" enable="true" persistence="false" label="Lautstärke für Benachrichtigungen" type="String" name="Notification Volume" channel.id="9">
 				<link>BUR_R_ALEXA_Notification_Volume</link>
 				<connection>
-					<alexa device.type="echo" device.channel="notificationVolume"/>
+					<alexa.communication device.type="echo" device.channel="notificationVolume"/>
 				</connection>
 				<groups>
 					<group.ref refid="Alexa"/>
