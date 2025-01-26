@@ -37,7 +37,7 @@ class OpenhabICALThingFileGenerator(OpenhabFileGenerator):
         self.file.write("maxSize=" + str(ical.bridge.max_size))
         self.file.write("\n\t")
 
-        self.file.write("] {")
+        self.file.write("]")
         self.file.write("\n\t")
 
         self.writeThing(ical,devices)
@@ -71,6 +71,5 @@ class OpenhabICALThingFileGenerator(OpenhabFileGenerator):
                     self.file.write(", textEventValue=\""+ channel.connection.ical.text_event_value +"\"")
                     self.file.write(", textValueType=\""+ str(channel.connection.ical.text_value_type.name) +"\"]" )
                     self.file.write("\n\t")
-        self.file.write("}")
 
 
