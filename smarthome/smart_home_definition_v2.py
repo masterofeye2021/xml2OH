@@ -6,6 +6,7 @@ from typing import List, Optional
 class Access(Enum):
     R = "R"
     RW = "RW"
+    W = "W"
 
 
 class AlexaInverted(Enum):
@@ -244,6 +245,12 @@ class KnxAddress:
                 "type": "Attribute",
             },
         )
+        dpt: Optional[str] = field(
+            default=None,
+            metadata={
+                "type": "Attribute",
+            },
+        )
 
     @dataclass
     class ListeningGa:
@@ -272,6 +279,12 @@ class KnxAddress:
             default=True,
             metadata={
                 "name": "is.readable",
+                "type": "Attribute",
+            },
+        )
+        dpt: Optional[str] = field(
+            default=None,
+            metadata={
                 "type": "Attribute",
             },
         )
@@ -1138,6 +1151,12 @@ class Channel:
                 "type": "Element",
             },
         )
+        internal: Optional[object] = field(
+            default=None,
+            metadata={
+                "type": "Element",
+            },
+        )
 
     @dataclass
     class Groups:
@@ -1263,6 +1282,13 @@ class Device:
         default=None,
         metadata={
             "name": "device.id",
+            "type": "Attribute",
+            "required": True,
+        },
+    )
+    enable: Optional[bool] = field(
+        default=None,
+        metadata={
             "type": "Attribute",
             "required": True,
         },

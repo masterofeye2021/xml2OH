@@ -1,4 +1,5 @@
 from FileGenerators.OpenhabFileGenerator import OpenhabFileGenerator
+from helper.builder import KnxBuilder
 from smarthome import Channel, Device, Comm, Group, KnxConfiguration, TypeValue
 import os
 
@@ -74,13 +75,15 @@ class OpenhabKNXThingFileGenerator(OpenhabFileGenerator):
     def writeChannel(self, knx : KnxConfiguration, devices : list[Device]):
 
         for device in devices:
-            if device.device_comm_type == Comm.KNX :
+            if device.device_comm_type == Comm.KNX and device.enable == True:
                 for channel in device.channel:
-                    self.writeChannelType(channel.type_value.value)
-                    self.writeChannelName(device,channel)
-                    self.writeChannelLabel(device,channel)
-                    self.writeGroupAddress(channel)
-                    self.file.write("\n\t\t\t")
+                    # Check if channel is enabled and has a knx connection, without a knx connection the channel is not written to the file
+                    if channel.enable == True and channel.connection.knx :
+                        self.writeChannelType(channel.type_value.value)
+                        self.writeChannelName(device,channel)
+                        self.writeChannelLabel(device,channel)
+                        self.writeGroupAddress(channel)
+                        self.file.write("\n\t\t\t")
         self.file.write("\n\t\t")
         self.file.write("}")
         self.file.write("}")
@@ -103,11 +106,20 @@ class OpenhabKNXThingFileGenerator(OpenhabFileGenerator):
         self.file.write("\t\t \"" + channel.name + "\"")
 
     def writeGroupAddress(self,channel: Channel):
-        if channel.type_value == TypeValue.CONTACT:
-            self.file.write("\t\t [ ga=\"<"+ str(channel.connection.knx.add1.main_ga.main) + "/" + str(channel.connection.knx.add1.main_ga.middle) +"/"+ str(channel.connection.knx.add1.main_ga.sub)+"\" ]")
 
-        if channel.type_value == TypeValue.NUMBER or channel.type_value == TypeValue.STRING:
-            self.file.write("\t\t [ ga=\"<"+ str(channel.connection.knx.add1.main_ga.main) + "/" + str(channel.connection.knx.add1.main_ga.middle) +"/"+ str(channel.connection.knx.add1.main_ga.sub)+"\" ]")
+        builder = KnxBuilder()
+        builder.config("ga")
+        builder.dpt(channel.connection.knx.add1.main_ga.dpt)
+        builder.isReading(channel.connection.knx.add1.main_ga.is_readable)
+        builder.main_gw_main(channel.connection.knx.add1.main_ga.main)
+        builder.main_gw_middle(channel.connection.knx.add1.main_ga.middle)
+        builder.main_gw_sub(channel.connection.knx.add1.main_ga.sub)
+        knxAdress = builder.build()
+        address = knxAdress.build()
+
+
+        if channel.type_value == TypeValue.NUMBER or channel.type_value == TypeValue.STRING or channel.type_value == TypeValue.SWITCH or channel.type_value == TypeValue.CONTACT:
+            self.file.write("\t\t [" + address + "]")
 
         if channel.type_value == TypeValue.ROLLERSHUTTER:
             upDownMainGa = str(channel.connection.knx.add1.main_ga.main) + "/" + str(channel.connection.knx.add1.main_ga.middle) +"/"+ str(channel.connection.knx.add1.main_ga.sub)
@@ -119,18 +131,18 @@ class OpenhabKNXThingFileGenerator(OpenhabFileGenerator):
 
             self.file.write("\t\t [ ")
             if channel.connection.knx.add1.main_ga.is_readable: 
-                self.file.write("upDown=\"<"+ upDownMainGa +"\",")
+                self.file.write("upDown=\""+ upDownMainGa +"\",")
             elif channel.connection.knx.add1.listening_ga != None:
                 upDownListeningGa = str(channel.connection.knx.add1.listening_ga.main) + "/" + str(channel.connection.knx.add1.listening_ga.middle) +"/"+ str(channel.connection.knx.add1.listening_ga.sub)
-                self.file.write("upDown=\"<"+ upDownMainGa + "+<"+ upDownListeningGa +"\",")
+                self.file.write("upDown=\""+ upDownMainGa + "+<"+ upDownListeningGa +"\",")
             else:
                 self.file.write("upDown=\""+ upDownMainGa +"\",")
 
             if channel.connection.knx.add2.main_ga.is_readable: 
-                self.file.write("stopMove=\"<"+ stopMainGa +"\",")
+                self.file.write("stopMove=\""+ stopMainGa +"\",")
             elif channel.connection.knx.add2.listening_ga != None:
                 stopListeningGa= str(channel.connection.knx.add2.listening_ga.main) + "/" + str(channel.connection.knx.add2.listening_ga.middle) +"/"+ str(channel.connection.knx.add2.listening_ga.sub)
-                self.file.write("stopMove=\"<"+ stopMainGa + "+<"+ stopListeningGa +"\",")
+                self.file.write("stopMove=\""+ stopMainGa + "+<"+ stopListeningGa +"\",")
             else:
                 self.file.write("stopMove=\""+ stopMainGa +"\",")
 
@@ -142,17 +154,4 @@ class OpenhabKNXThingFileGenerator(OpenhabFileGenerator):
             else:
                 self.file.write("position=\""+ positionMainGa +"\"")
 
-            self.file.write("]")
-        
-        if channel.type_value == TypeValue.SWITCH:
-            mainGa = str(channel.connection.knx.add1.main_ga.main) + "/" + str(channel.connection.knx.add1.main_ga.middle) +"/"+ str(channel.connection.knx.add1.main_ga.sub)
-            self.file.write("\t\t [ ")
-            if channel.connection.knx.add1.main_ga.is_readable: 
-                self.file.write("ga=\"<"+ mainGa +"\"")
-            elif channel.connection.knx.add1.listening_ga != None:
-                listeningGa = str(channel.connection.knx.add1.listening_ga.main) + "/" + str(channel.connection.knx.add1.listening_ga.middle) +"/"+ str(channel.connection.knx.add1.listening_ga.sub)
-                self.file.write("ga=\"<"+ mainGa + "+<"+ listeningGa +"\"")
-            else:
-                self.file.write("ga=\""+ mainGa +"\"")
-            
             self.file.write("]")

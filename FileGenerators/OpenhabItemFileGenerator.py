@@ -26,6 +26,7 @@ class OpenhabItemFileGenerator(OpenhabFileGenerator):
         self.file.write("\n")
         #Write all devices -> items
         for device in devices:
+            if device.enable == True:
                 for channel in device.channel:
                     self.writeRow(device,channel, groups)
                 
@@ -75,7 +76,8 @@ class OpenhabItemFileGenerator(OpenhabFileGenerator):
         self.writeGroup(channel,groups)
         self.writeTag(channel)
         if device.device_comm_type == Comm.KNX:
-            self.writeKNXBindingConfiguration(name,device, channel)
+            if channel.connection.knx:
+                self.writeKNXBindingConfiguration(name,device, channel) 
         elif device.device_comm_type == Comm.ICAL:
             self.writeICALBindingConfiguration(name,device, channel)
         elif device.device_comm_type == Comm.NTP:
@@ -152,6 +154,9 @@ class OpenhabItemFileGenerator(OpenhabFileGenerator):
         if channel.meta:
             for metadata in channel.meta.meta_attribute:
                 self.file.write("," + metadata.name + "=\"" + metadata.value + "\"")
+        
+        if channel.unit.value != "ND":
+            self.file.write("," + "unit" + "=\"" + channel.unit.value + "\"")
         self.file.write("]")
 
     def writeKNXBindingConfiguration(self,name: str, device : Device, channel : Channel):
@@ -196,4 +201,4 @@ class OpenhabItemFileGenerator(OpenhabFileGenerator):
         self.file.write(startDel)
         self.file.write("channel=\"http:url:door:"+name+"\"")
         self.writeMetaData(device, channel)
-        self.file.write(stopDel)         
+        self.file.write(stopDel)

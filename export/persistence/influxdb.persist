@@ -1,0 +1,49 @@
+Strategies {
+    everyMinute : "0 * * * * ?"
+    everyHour : "0 0 * * * ?"
+    everyDay : "0 0 0 * * ?"
+    default = everyChange
+}
+
+Items {
+    WOZ_R_SENSOR_Couch_Temperatur : strategy = everyChange, everyHour
+    WOZ_R_SENSOR_Couch_Luftfeuchtigkeit : strategy = everyChange, everyHour
+    WOZ_R_SENSOR_Couch_Relativer_Luftdruck : strategy = everyChange, everyHour
+    WOZ_R_SENSOR_Couch_Absoluter_Luftdruck : strategy = everyChange, everyHour
+    WOZ_R_SENSOR_Couch_CO2 : strategy = everyChange, everyHour
+    WOZ_R_SENSOR_Couch_VOC : strategy = everyChange, everyHour
+    KUE_R_SENSOR_Temperatur : strategy = everyChange, everyHour
+    KUE_R_SENSOR_Luftfeuchtigkeit : strategy = everyChange, everyHour
+    KUE_R_SENSOR_Relativer_Luftdruck : strategy = everyChange, everyHour
+    KUE_R_SENSOR_Absoluter_Luftdruck : strategy = everyChange, everyHour
+    KUE_R_SENSOR_CO2 : strategy = everyChange, everyHour
+    KUE_R_SENSOR_VOC : strategy = everyChange, everyHour
+    FLUEG_R_SENSOR_Temperatur : strategy = everyChange, everyHour
+    FLUEG_R_SENSOR_Luftfeuchtigkeit : strategy = everyChange, everyHour
+    FLUEG_R_SENSOR_Relativer_Luftdruck : strategy = everyChange, everyHour
+    FLUEG_R_SENSOR_Absoluter_Luftdruck : strategy = everyChange, everyHour
+    FLUEG_R_SENSOR_CO2 : strategy = everyChange, everyHour
+    FLUEG_R_SENSOR_VOC : strategy = everyChange, everyHour
+    HWR_R_SENSOR_Temperatur : strategy = everyChange, everyHour
+    HWR_R_SENSOR_Luftfeuchtigkeit : strategy = everyChange, everyHour
+    HWR_R_SENSOR_Relativer_Luftdruck : strategy = everyChange, everyHour
+    HWR_R_SENSOR_Absoluter_Luftdruck : strategy = everyChange, everyHour
+    HWR_R_SENSOR_CO2 : strategy = everyChange, everyHour
+    HWR_R_SENSOR_VOC : strategy = everyChange, everyHour
+    SLZ_R_SENSOR_Temperatur : strategy = everyChange, everyHour
+    SLZ_R_SENSOR_Luftfeuchtigkeit : strategy = everyChange, everyHour
+    SLZ_R_SENSOR_Relativer_Luftdruck : strategy = everyChange, everyHour
+    SLZ_R_SENSOR_Absoluter_Luftdruck : strategy = everyChange, everyHour
+    SLZ_R_SENSOR_CO2 : strategy = everyChange, everyHour
+    SLZ_R_SENSOR_VOC : strategy = everyChange, everyHour
+    BAD_R_CONTROLUNIT_Temperatur : strategy = everyChange, everyHour
+    BAD_R_CONTROLUNIT_Betriebsstatus : strategy = everyChange, everyHour
+    HWR_R_DOOR_userId : strategy = everyChange, everyHour
+    HWR_R_DOOR_action : strategy = everyChange, everyHour
+    HWR_R_DOOR_fingerId : strategy = everyChange, everyHour
+    HWR_R_DOOR_relayId : strategy = everyChange, everyHour
+    HWR_R_DOOR_fsSerial : strategy = everyChange, everyHour
+    HWR_R_DOOR_termId : strategy = everyChange, everyHour
+    HWR_R_DOOR_event : strategy = everyChange, everyHour
+    HWR_R_DOOR_Door_Bell : strategy = everyChange, everyHour
+}
