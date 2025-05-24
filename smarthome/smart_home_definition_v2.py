@@ -9,7 +9,13 @@ class Access(Enum):
     W = "W"
 
 
-class AlexaDeviceType1(Enum):
+@dataclass
+class Alarm:
+    class Meta:
+        name = "alarm"
+
+
+class AlexaCommunicationDeviceType(Enum):
     ECHO = "echo"
     ECHOSPOT = "echospot"
     ECHOSHOW = "echoshow"
@@ -19,7 +25,7 @@ class AlexaDeviceType1(Enum):
     SMART_HOME_DEVICE_GROUP = "smartHomeDeviceGroup"
 
 
-class AlexaDeviceType2(Enum):
+class AlexaDeviceType(Enum):
     ECHO = "echo"
     ECHOSPOT = "echospot"
     ECHOSHOW = "echoshow"
@@ -65,6 +71,7 @@ class Comm(Enum):
     EKEY = "EKEY"
     HTTP = "HTTP"
     ALEXA = "ALEXA"
+    OPENHAB = "OPENHAB"
 
 
 class DeviceSpecification(Enum):
@@ -84,6 +91,9 @@ class DeviceSpecification(Enum):
     TIME_KNX = "TimeKNX"
     IDMKNX = "IDMKNX"
     ALEXA = "Alexa"
+    OPENHAB = "Openhab"
+    WASHER = "Washer"
+    HUAWEI_MODBUS = "Huawei.Modbus"
 
 
 class Format(Enum):
@@ -106,6 +116,8 @@ class Function(Enum):
     POWER = "POWER"
     DOOR = "DOOR"
     ALEXA = "ALEXA"
+    WASHINGMASCHINE = "WASHINGMASCHINE"
+    PV = "PV"
 
 
 class GroupFunction(Enum):
@@ -121,6 +133,63 @@ class GroupFunction(Enum):
     COUNT = "COUNT"
     LATEST = "LATEST"
     EARLIEST = "EARLIEST"
+
+
+@dataclass
+class HuaweiConfiguration:
+    class Meta:
+        name = "huawei.configuration"
+
+    bridge: Optional["HuaweiConfiguration.Bridge"] = field(
+        default=None,
+        metadata={
+            "type": "Element",
+            "required": True,
+        },
+    )
+
+    @dataclass
+    class Bridge:
+        ip: Optional[str] = field(
+            default=None,
+            metadata={
+                "type": "Attribute",
+                "required": True,
+            },
+        )
+        port: int = field(
+            default=502,
+            metadata={
+                "type": "Attribute",
+            },
+        )
+        id: int = field(
+            default=1,
+            metadata={
+                "type": "Attribute",
+            },
+        )
+        rtu_encoding: bool = field(
+            default=False,
+            metadata={
+                "name": "rtu.encoding",
+                "type": "Attribute",
+            },
+        )
+        time_between_transactions: int = field(
+            default=1500,
+            metadata={
+                "name": "time.between.transactions",
+                "type": "Attribute",
+            },
+        )
+        max_reconnect: int = field(
+            default=3,
+            metadata={
+                "name": "max.reconnect",
+                "type": "Attribute",
+            },
+        )
 
 
 @dataclass
@@ -220,6 +289,7 @@ class Icon(Enum):
     FA_PLUG = "fa-plug"
     FA_UTILITY_POLE = "fa-utility-pole"
     FA_CIRCLE_EXCLAMATION = "fa-circle-exclamation"
+    FA_BATTERY_BOLT = "fa-battery-bolt"
 
 
 @dataclass
@@ -427,14 +497,41 @@ class KnxConfiguration:
         )
 
 
-class ModbusReadValue(Enum):
-    UINT16 = "uint16"
+class ModbusReadValueType(Enum):
+    INT64 = "int64"
+    INT64_SWAP = "int64_swap"
+    UINT64 = "uint64"
+    UINT64_SWAP = "uint64_swap"
+    FLOAT32 = "float32"
+    FLOAT32_SWAP = "float32_swap"
     INT32 = "int32"
+    INT32_SWAP = "int32_swap"
     UINT32 = "uint32"
+    UINT32_SWAP = "uint32_swap"
+    INT16 = "int16"
+    UINT16 = "uint16"
+    INT8 = "int8"
+    UINT8 = "uint8"
+    BIT = "bit"
 
 
-class ModbusType(Enum):
+class ModbusThingWriteType(Enum):
+    COIL = "coil"
     HOLDING = "holding"
+
+
+@dataclass
+class Notification:
+    class Meta:
+        name = "notification"
+
+    id: Optional[str] = field(
+        default=None,
+        metadata={
+            "type": "Attribute",
+            "required": True,
+        },
+    )
 
 
 @dataclass
@@ -533,6 +630,13 @@ class Ping:
     )
 
 
+class PollerType(Enum):
+    COIL = "coil"
+    DISCRETE = "discrete"
+    HOLDING = "holding"
+    INPUT = "input"
+
+
 class ThingAuthMode(Enum):
     BASIC = "BASIC"
     BASIC_PREEMPTIVE = "BASIC_PREEMPTIVE"
@@ -597,7 +701,75 @@ class Alexa:
     class Meta:
         name = "alexa"
 
-    device_type: Optional[AlexaDeviceType2] = field(
+    inverted: Optional[AlexaInverted] = field(
+        default=None,
+        metadata={
+            "type": "Attribute",
+        },
+    )
+    primary_control: Optional[str] = field(
+        default=None,
+        metadata={
+            "name": "primaryControl",
+            "type": "Attribute",
+        },
+    )
+    capability_names: Optional[str] = field(
+        default=None,
+        metadata={
+            "name": "capabilityNames",
+            "type": "Attribute",
+        },
+    )
+    supported_commands: Optional[str] = field(
+        default=None,
+        metadata={
+            "name": "supportedCommands",
+            "type": "Attribute",
+        },
+    )
+    supported_range: Optional[str] = field(
+        default=None,
+        metadata={
+            "name": "supportedRange",
+            "type": "Attribute",
+        },
+    )
+    unit_of_measure: Optional[str] = field(
+        default=None,
+        metadata={
+            "name": "unitOfMeasure",
+            "type": "Attribute",
+        },
+    )
+    action_mappings: Optional[str] = field(
+        default=None,
+        metadata={
+            "name": "actionMappings",
+            "type": "Attribute",
+        },
+    )
+    state_mappings: Optional[str] = field(
+        default=None,
+        metadata={
+            "name": "stateMappings",
+            "type": "Attribute",
+        },
+    )
+    alexa: Optional[str] = field(
+        default=None,
+        metadata={
+            "type": "Attribute",
+        },
+    )
+
+
+@dataclass
+class AlexaCommunication:
+    class Meta:
+        name = "alexa.communication"
+
+    device_type: Optional[AlexaCommunicationDeviceType] = field(
         default=None,
         metadata={
             "name": "device.type",
@@ -678,7 +850,7 @@ class AlexaConfiguration:
                 "required": True,
             },
         )
-        type_value: Optional[AlexaDeviceType1] = field(
+        type_value: Optional[AlexaDeviceType] = field(
             default=None,
             metadata={
                 "name": "type",
@@ -686,74 +858,6 @@ class AlexaConfiguration:
                 "required": True,
             },
         )
-
-
-@dataclass
-class Alexa1:
-    class Meta:
-        name = "alexa"
-
-    inverted: Optional[AlexaInverted] = field(
-        default=None,
-        metadata={
-            "type": "Attribute",
-        },
-    )
-    primary_control: Optional[str] = field(
-        default=None,
-        metadata={
-            "name": "primaryControl",
-            "type": "Attribute",
-        },
-    )
-    capability_names: Optional[str] = field(
-        default=None,
-        metadata={
-            "name": "capabilityNames",
-            "type": "Attribute",
-        },
-    )
-    supported_commands: Optional[str] = field(
-        default=None,
-        metadata={
-            "name": "supportedCommands",
-            "type": "Attribute",
-        },
-    )
-    supported_range: Optional[str] = field(
-        default=None,
-        metadata={
-            "name": "supportedRange",
-            "type": "Attribute",
-        },
-    )
-    unit_of_measure: Optional[str] = field(
-        default=None,
-        metadata={
-            "name": "unitOfMeasure",
-            "type": "Attribute",
-        },
-    )
-    action_mappings: Optional[str] = field(
-        default=None,
-        metadata={
-            "name": "actionMappings",
-            "type": "Attribute",
-        },
-    )
-    state_mappings: Optional[str] = field(
-        default=None,
-        metadata={
-            "name": "stateMappings",
-            "type": "Attribute",
-        },
-    )
-    alexa: Optional[str] = field(
-        default=None,
-        metadata={
-            "type": "Attribute",
-        },
-    )
 
 
 @dataclass
@@ -1128,6 +1232,111 @@ class Knx:
 
 
 @dataclass
+class ModbusThing:
+    class Meta:
+        name = "modbus.thing"
+
+    read_value_type: Optional[ModbusReadValueType] = field(
+        default=None,
+        metadata={
+            "name": "readValueType",
+            "type": "Attribute",
+        },
+    )
+    read_start: Optional[int] = field(
+        default=None,
+        metadata={
+            "name": "readStart",
+            "type": "Attribute",
+        },
+    )
+    read_transform: Optional[str] = field(
+        default=None,
+        metadata={
+            "name": "readTransform",
+            "type": "Attribute",
+        },
+    )
+    write_value_type: Optional[ModbusReadValueType] = field(
+        default=None,
+        metadata={
+            "name": "writeValueType",
+            "type": "Attribute",
+        },
+    )
+    write_start: Optional[int] = field(
+        default=None,
+        metadata={
+            "name": "writeStart",
+            "type": "Attribute",
+        },
+    )
+    write_type: Optional[ModbusThingWriteType] = field(
+        default=None,
+        metadata={
+            "name": "writeType",
+            "type": "Attribute",
+        },
+    )
+    write_transform: Optional[str] = field(
+        default=None,
+        metadata={
+            "name": "writeTransform",
+            "type": "Attribute",
+        },
+    )
+    write_multiple_even_with_single_register_or_coil: bool = field(
+        default=False,
+        metadata={
+            "name": "writeMultipleEvenWithSingleRegisterOrCoil",
+            "type": "Attribute",
+        },
+    )
+    write_max_tries: int = field(
+        default=3,
+        metadata={
+            "name": "writeMaxTries",
+            "type": "Attribute",
+        },
+    )
+    update_unchanged_values_every_millis: int = field(
+        default=1000,
+        metadata={
+            "name": "updateUnchangedValuesEveryMillis",
+            "type": "Attribute",
+        },
+    )
+
+
+@dataclass
+class NotificationDefinition:
+    class Meta:
+        name = "notification.definition"
+
+    notificiation: List[Notification] = field(
+        default_factory=list,
+        metadata={
+            "type": "Element",
+            "min_occurs": 1,
+        },
+    )
+
+
+@dataclass
+class Groups:
+    class Meta:
+        name = "groups"
+
+    group: List[Group] = field(
+        default_factory=list,
+        metadata={
+            "type": "Element",
+            "min_occurs": 1,
+        },
+    )
+
+
+@dataclass
 class Modbus:
     class Meta:
         name = "modbus"
@@ -1139,44 +1348,58 @@ class Modbus:
             "required": True,
         },
     )
-    address: Optional[int] = field(
-        default=None,
-        metadata={
-            "type": "Element",
-            "required": True,
-        },
-    )
-    read_value: Optional[ModbusReadValue] = field(
-        default=None,
-        metadata={
-            "name": "read.value",
-            "type": "Element",
-            "required": True,
-        },
-    )
 
     @dataclass
     class Poller:
-        address: Optional[int] = field(
+        thing: Optional[ModbusThing] = field(
             default=None,
             metadata={
                 "type": "Element",
+                "required": True,
+            },
+        )
+        address: Optional[int] = field(
+            default=None,
+            metadata={
+                "type": "Attribute",
                 "required": True,
             },
         )
         length: Optional[int] = field(
             default=None,
             metadata={
-                "type": "Element",
+                "type": "Attribute",
                 "required": True,
             },
         )
-        type_value: ModbusType = field(
-            default=ModbusType.HOLDING,
+        type_value: Optional[PollerType] = field(
+            default=None,
             metadata={
                 "name": "type",
-                "type": "Element",
+                "type": "Attribute",
                 "required": True,
+            },
+        )
+        refresh: Optional[int] = field(
+            default=None,
+            metadata={
+                "type": "Attribute",
+                "required": True,
+            },
+        )
+        max_tries: Optional[int] = field(
+            default=None,
+            metadata={
+                "name": "maxTries",
+                "type": "Attribute",
+                "required": True,
+            },
+        )
+        cache_millis: int = field(
+            default=0,
+            metadata={
+                "name": "cacheMillis",
+                "type": "Attribute",
             },
         )
 
@@ -1223,6 +1446,18 @@ class Channel:
         default=None,
         metadata={
             "type": "Element",
+        },
+    )
+    notification: Optional["Channel.Notification"] = field(
+        default=None,
+        metadata={
+            "type": "Element",
+        },
+    )
+    tag: Optional[object] = field(
+        default=None,
+        metadata={
+            "type": "Attribute",
         },
     )
     format: Optional[Format] = field(
@@ -1354,9 +1589,10 @@ class Channel:
                 "type": "Element",
             },
         )
-        alexa: Optional[Alexa] = field(
+        alexa_communication: Optional[AlexaCommunication] = field(
             default=None,
             metadata={
+                "name": "alexa.communication",
                 "type": "Element",
             },
         )
@@ -1411,26 +1647,30 @@ class Channel:
 
     @dataclass
     class Mapref:
-        refid2: Optional[str] = field(
+        refmap: Optional[str] = field(
             default=None,
             metadata={
                 "type": "Attribute",
             },
         )
 
-
-@dataclass
-class Groups:
-    class Meta:
-        name = "groups"
-
-    group: List[Group] = field(
-        default_factory=list,
-        metadata={
-            "type": "Element",
-            "min_occurs": 1,
-        },
-    )
+    @dataclass
+    class Notification:
+        notification_type: Optional[str] = field(
+            default=None,
+            metadata={
+                "name": "notification.type",
+                "type": "Attribute",
+                "required": True,
+            },
+        )
+        content: Optional[object] = field(
+            default=None,
+            metadata={
+                "type": "Attribute",
+                "required": True,
+            },
+        )
 
 
 @dataclass
@@ -1599,6 +1839,14 @@ class Openhab:
             "required": True,
         },
     )
+    huawei_configuration: Optional[HuaweiConfiguration] = field(
+        default=None,
+        metadata={
+            "name": "huawei.configuration",
+            "type": "Element",
+            "required": True,
+        },
+    )
 
     @dataclass
     class Definition:
@@ -1616,5 +1864,13 @@ class Openhab:
                 "name": "idm.map",
                 "type": "Element",
                 "min_occurs": 1,
+            },
+        )
+        information_definition: Optional[NotificationDefinition] = field(
+            default=None,
+            metadata={
+                "name": "information.definition",
+                "type": "Element",
+                "required": True,
             },
         )

@@ -1,0 +1,5 @@
+
+
+Contact  HWR_R_WASHINGMASCHINE_Status "Status der Waschmaschine" <fa-lightbulb> (HWR) {smartux="" [location="HWR"]}
+Contact  HWR_RW_WASHINGMASCHINE_Alarm_Waesche_fertig "Alarm - Wäsche Fertig" <fa-circle-exclamation> (HWR) {smartux="" [location="HWR", alarm="Information", alarmText="Die Waschmaschine ist fertig. Bitte hole die Wäsche aus der Maschine."]}
+Contact  HWR_RW_WASHINGMASCHINE_Alarm_Waesche_fertig_30_Minuten "Alarm - Wäsche Fertig 30Minuten" <fa-circle-exclamation> (HWR) {smartux="" [location="HWR", alarm="Warning", alarmText="Die Wäsche ist bereits seit 30 Minuten in der Waschmaschine. Bitte hole die Wäsche aus der Maschine."]}

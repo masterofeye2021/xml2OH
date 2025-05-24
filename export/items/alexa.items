@@ -2,20 +2,20 @@
 
 Player  KUE_R_ALEXA_Alexa_Player "Alexa Player für die Küche" <fa-lightbulb> (Alexa,KUE) {channel="amazonechocontrol:echo:ivo:KUE_ALEXA_Alexa_Kueche:player", smartux="" [location="KUE"]}
 Dimmer  KUE_RW_ALEXA_Alexa_Player_Volume "Alexa Player Lautstärke  [%.0f]"  <fa-lightbulb> (Alexa,KUE) {channel="amazonechocontrol:echo:ivo:KUE_ALEXA_Alexa_Kueche:volume", smartux="" [location="KUE"]}
-String  KUE_RW_ALEXA_Play_Alarm "Spielt Alarm Sound ab" <fa-lightbulb> (Alexa,KUE) {channel="amazonechocontrol:echo:ivo:KUE_ALEXA_Alexa_Kueche:playAlarmSound", smartux="" [location="KUE"]}
+String  KUE_RW_ALEXA_Play_Alarm "Spielt Alarm Sound ab" <fa-lightbulb> (Alexa,KUE,AlexaAlarm) {channel="amazonechocontrol:echo:ivo:KUE_ALEXA_Alexa_Kueche:playAlarmSound", smartux="" [location="KUE"]}
 String  KUE_W_ALEXA_Play_Music "Spielt bestimmten Titel ab  [%s]"  <fa-lightbulb> (Alexa,KUE) {channel="amazonechocontrol:echo:ivo:KUE_ALEXA_Alexa_Kueche:playMusicVoiceCommand", smartux="" [location="KUE"]}
 String  KUE_W_ALEXA_Start_Commando "Startet Kommando [%s]"  <fa-lightbulb> (Alexa,KUE) {channel="amazonechocontrol:echo:ivo:KUE_ALEXA_Alexa_Kueche:textCommand", smartux="" [location="KUE"]}
-String  KUE_W_ALEXA_TTS "TTS [%s]"  <fa-lightbulb> (Alexa,KUE) {channel="amazonechocontrol:echo:ivo:KUE_ALEXA_Alexa_Kueche:textToSpeech", smartux="" [location="KUE"]}
-Dimmer  KUE_W_ALEXA_TTS_Volume "TTS Lautstärke [%.0f]"  <fa-lightbulb> (Alexa,KUE) {channel="amazonechocontrol:echo:ivo:KUE_ALEXA_Alexa_Kueche:textToSpeechVolume", smartux="" [location="KUE"]}
-String  KUE_RW_ALEXA_TTS_Volume "Letztes Sprach Kommando  [%s]"  <fa-lightbulb> (Alexa,KUE) {channel="amazonechocontrol:echo:ivo:KUE_ALEXA_Alexa_Kueche:lastVoiceCommand", smartux="" [location="KUE"]}
+String  KUE_W_ALEXA_TTS "TTS [%s]"  <fa-lightbulb> (Alexa,KUE,TTS) {channel="amazonechocontrol:echo:ivo:KUE_ALEXA_Alexa_Kueche:textToSpeech", smartux="" [location="KUE"]}
+Dimmer  KUE_W_ALEXA_TTS_Volume "TTS Lautstärke [%.0f]"  <fa-lightbulb> (Alexa,KUE,TTSVolume) {channel="amazonechocontrol:echo:ivo:KUE_ALEXA_Alexa_Kueche:textToSpeechVolume", smartux="" [location="KUE"]}
+String  KUE_RW_ALEXA_Last_Command "Letztesr Sprachbefehl [%s]"  <fa-lightbulb> (Alexa,KUE) {channel="amazonechocontrol:echo:ivo:KUE_ALEXA_Alexa_Kueche:lastVoiceCommand", smartux="" [location="KUE"]}
 String  KUE_R_ALEXA_Notification_Volume "Lautstärke für Benachrichtigungen [%.0f]"  <fa-lightbulb> (Alexa,KUE) {channel="amazonechocontrol:echo:ivo:KUE_ALEXA_Alexa_Kueche:notificationVolume", smartux="" [location="KUE"]}
 
 Player  BUR_R_ALEXA_Alexa_Player "Alexa Player für die Küche" <fa-lightbulb> (Alexa,KUE) {channel="amazonechocontrol:echo:ivo:BUR_ALEXA_Alexa_Buero:player", smartux="" [location="BUR"]}
 Dimmer  BUR_RW_ALEXA_Alexa_Player_Volume "Alexa Player Lautstärke  [%.0f]"  <fa-lightbulb> (Alexa,KUE) {channel="amazonechocontrol:echo:ivo:BUR_ALEXA_Alexa_Buero:volume", smartux="" [location="BUR"]}
-String  BUR_RW_ALEXA_Play_Alarm "Spielt Alarm Sound ab" <fa-lightbulb> (Alexa,KUE) {channel="amazonechocontrol:echo:ivo:BUR_ALEXA_Alexa_Buero:playAlarmSound", smartux="" [location="BUR"]}
+String  BUR_RW_ALEXA_Play_Alarm "Spielt Alarm Sound ab" <fa-lightbulb> (Alexa,KUE,AlexaAlarm) {channel="amazonechocontrol:echo:ivo:BUR_ALEXA_Alexa_Buero:playAlarmSound", smartux="" [location="BUR"]}
 String  BUR_W_ALEXA_Play_Music "Spielt bestimmten Titel ab  [%s]"  <fa-lightbulb> (Alexa,KUE) {channel="amazonechocontrol:echo:ivo:BUR_ALEXA_Alexa_Buero:playMusicVoiceCommand", smartux="" [location="BUR"]}
 String  BUR_W_ALEXA_Start_Commando "Startet Kommando [%s]"  <fa-lightbulb> (Alexa,KUE) {channel="amazonechocontrol:echo:ivo:BUR_ALEXA_Alexa_Buero:textCommand", smartux="" [location="BUR"]}
-String  BUR_W_ALEXA_TTS "TTS [%s]"  <fa-lightbulb> (Alexa,KUE) {channel="amazonechocontrol:echo:ivo:BUR_ALEXA_Alexa_Buero:textToSpeech", smartux="" [location="BUR"]}
-Dimmer  BUR_W_ALEXA_TTS_Volume "TTS Lautstärke [%.0f]"  <fa-lightbulb> (Alexa,KUE) {channel="amazonechocontrol:echo:ivo:BUR_ALEXA_Alexa_Buero:textToSpeechVolume", smartux="" [location="BUR"]}
-String  BUR_RW_ALEXA_TTS_Volume "Letztes Sprach Kommando  [%s]"  <fa-lightbulb> (Alexa,KUE) {channel="amazonechocontrol:echo:ivo:BUR_ALEXA_Alexa_Buero:lastVoiceCommand", smartux="" [location="BUR"]}
+String  BUR_W_ALEXA_TTS "TTS [%s]"  <fa-lightbulb> (Alexa,KUE,TTS) {channel="amazonechocontrol:echo:ivo:BUR_ALEXA_Alexa_Buero:textToSpeech", smartux="" [location="BUR"]}
+Dimmer  BUR_W_ALEXA_TTS_Volume "TTS Lautstärke [%.0f]"  <fa-lightbulb> (Alexa,KUE,TTSVolume) {channel="amazonechocontrol:echo:ivo:BUR_ALEXA_Alexa_Buero:textToSpeechVolume", smartux="" [location="BUR"]}
+String  BUR_RW_ALEXA_Last_Command "Letztesr Sprachbefehl [%s]"  <fa-lightbulb> (Alexa,KUE) {channel="amazonechocontrol:echo:ivo:BUR_ALEXA_Alexa_Buero:lastVoiceCommand", smartux="" [location="BUR"]}
 String  BUR_R_ALEXA_Notification_Volume "Lautstärke für Benachrichtigungen [%.0f]"  <fa-lightbulb> (Alexa,KUE) {channel="amazonechocontrol:echo:ivo:BUR_ALEXA_Alexa_Buero:notificationVolume", smartux="" [location="BUR"]}

@@ -1,0 +1,28 @@
+Bridge modbus:tcp:huaweipv [
+	host="192.168.178.248",
+	port=502,
+	id=1,
+	rtuEncoded=false,
+	timeBetweenTransactionsMillis=1500,
+	connectMaxTries=3
+	] {
+		Bridge poller 32080 [
+		start=32080,
+		length=2,
+		type="holding",
+		refresh=1000,
+		maxTries=3,
+		cacheMillis=0
+		] {
+			Thing data TKR_AC_Leistung [ readValueType="int32",readStart=32080,writeMultipleEvenWithSingleRegisterOrCoil=false,writeMaxTries=3,updateUnchangedValuesEveryMillis=1000]
+		}Bridge poller 32000 [
+		start=32000,
+		length=1,
+		type="holding",
+		refresh=10000,
+		maxTries=3,
+		cacheMillis=0
+		] {
+			Thing data TKR_Status_Wechselrichter [ readValueType="uint16",readStart=32000,writeMultipleEvenWithSingleRegisterOrCoil=false,writeMaxTries=3,updateUnchangedValuesEveryMillis=1000]
+		}
+	}

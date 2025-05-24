@@ -1,5 +1,5 @@
 from FileGenerators.OpenhabFileGenerator import OpenhabFileGenerator
-from smarthome import Openhab, Unit, Area, Format, Function, Channel, Device, Comm, Groups, Group
+from smarthome import Openhab, Unit, Area, Format, Function, Channel, Device, Comm, Groups, Group, DeviceSpecification
 import os
 from typing import cast
 
@@ -91,6 +91,10 @@ class OpenhabItemFileGenerator(OpenhabFileGenerator):
             self.writeDOORBindingConfiguration(name,device, channel)
         elif device.device_comm_type == Comm.ALEXA:
              self.writeAlexaBindingConfiguration(name,device, channel)
+        elif device.device_comm_type == Comm.OPENHAB:
+             self.writeOpenhabConfiguration(name,device, channel)  
+        elif device.device_comm_type == Comm.MODBUS or device.device_specification == DeviceSpecification.HUAWEI_MODBUS:
+             self.writeHuaweiPVBindingConfiguration(name,device, channel)
         self.file.write("\n")
 
 
@@ -134,6 +138,8 @@ class OpenhabItemFileGenerator(OpenhabFileGenerator):
         self.file.write(" ")
         pass
 
+    
+
     def writeGroup(self, channel : Channel, groups : list[Group]):
         startDelimiter = "("
         endDelmiter = ")"
@@ -150,14 +156,21 @@ class OpenhabItemFileGenerator(OpenhabFileGenerator):
         self.file.write(" ")
 
     def writeTag(self, channel: Channel):
-        #self.file.write(channel.tag)
-        #self.file.write(" ")
+        if channel.tag:
+            self.file.write("[")
+            self.file.write(channel.tag)
+            self.file.write("]")
+            self.file.write(" ")
         pass
 
     def writeMetaData(self, device : Device, channel : Channel):
         #seperator to seperate different 
-        self.file.write(", ")
+        
         self.file.write("smartux=\"""\" [location=\"" + device.device_area.value + "\"")
+        if channel.notification:
+            self.file.write(", alarm=" + "\"" + channel.notification.notification_type  + "\"")
+            self.file.write(", alarmText=" + "\"" + channel.notification.content  + "\"")
+
         
         if channel.meta:
             for metadata in channel.meta.meta_attribute:
@@ -172,6 +185,7 @@ class OpenhabItemFileGenerator(OpenhabFileGenerator):
         stopDel = "}"
         self.file.write(startDel)
         self.file.write("channel=\"knx:device:bridge:generic:" + name + "\"")
+        self.file.write(", ")
         self.writeMetaData(device, channel)
         self.file.write(stopDel)
         pass
@@ -182,6 +196,7 @@ class OpenhabItemFileGenerator(OpenhabFileGenerator):
         stopDel = "}"
         self.file.write(startDel)
         self.file.write("channel=\"knx:device:bridge:generic:" + name + "\", channel=\"ntp:ntp:master:dateTime\"")
+        self.file.write(", ")
         self.writeMetaData(device, channel)
         self.file.write(stopDel)
         pass
@@ -194,6 +209,7 @@ class OpenhabItemFileGenerator(OpenhabFileGenerator):
         stopDel = "}"
         self.file.write(startDel)
         self.file.write("channel=\"icalendar:eventfilter:"+ name + ":result_0#begin"+ "\"")
+        self.file.write(", ")
         self.writeMetaData(device, channel)
         self.file.write(stopDel)
 
@@ -202,6 +218,7 @@ class OpenhabItemFileGenerator(OpenhabFileGenerator):
         stopDel = "}"
         self.file.write(startDel)
         self.file.write("channel=\"ntp:ntp:master:dateTime"+ "\"")
+        self.file.write(", ")
         self.writeMetaData(device, channel)
         self.file.write(stopDel)
 
@@ -210,6 +227,7 @@ class OpenhabItemFileGenerator(OpenhabFileGenerator):
         stopDel = "}"
         self.file.write(startDel)
         self.file.write("channel=\"ekey:cvlan:master:"+ name + "\"")
+        self.file.write(", ")
         self.writeMetaData(device, channel)
         self.file.write(stopDel)
 
@@ -218,6 +236,7 @@ class OpenhabItemFileGenerator(OpenhabFileGenerator):
         stopDel = "}"
         self.file.write(startDel)
         self.file.write("channel=\"http:url:door:"+name+"\"")
+        self.file.write(", ")
         self.writeMetaData(device, channel)
         self.file.write(stopDel)
 
@@ -231,8 +250,30 @@ class OpenhabItemFileGenerator(OpenhabFileGenerator):
         name.translate(self.umlaut_map)
 
 
-        self.file.write("channel=\"amazonechocontrol:echo:ivo:"+ name+ ":" +channel.connection.alexa.device_channel+"\"")
+        self.file.write("channel=\"amazonechocontrol:echo:ivo:"+ name+ ":" +channel.connection.alexa_communication.device_channel+"\"")
+        self.file.write(", ")
+        self.writeMetaData(device, channel)
+        self.file.write(stopDel)
+
+    def writeHuaweiPVBindingConfiguration(self,name :str,device : Device, channel : Channel):
+        startDel = "{"
+        stopDel = "}"
+        self.file.write(startDel)
+        name = device.device_area.value + "_"  + channel.name 
+        name = name.replace(" ", "_")
+        name = name.replace("/", "_")
+        name.translate(self.umlaut_map)
+
+
+        self.file.write("channel=\"modbus:data:huaweipv:" + str(channel.connection.modbus.poller.address) + ":" + name + ":number"+ "\"")
+        self.file.write(", ")
         self.writeMetaData(device, channel)
         self.file.write(stopDel)
 
 
+    def writeOpenhabConfiguration(self,name :str,device : Device, channel : Channel):
+        startDel = "{"
+        stopDel = "}"
+        self.file.write(startDel)
+        self.writeMetaData(device, channel)
+        self.file.write(stopDel)

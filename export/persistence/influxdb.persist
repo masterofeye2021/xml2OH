@@ -38,6 +38,9 @@ Items {
     SLZ_R_SENSOR_VOC : strategy = everyChange, everyHour
     BAD_R_CONTROLUNIT_Temperatur : strategy = everyChange, everyHour
     BAD_R_CONTROLUNIT_Betriebsstatus : strategy = everyChange, everyHour
+    HWR_R_POWER_Waschmaschine_Wirkleistung : strategy = everyChange, everyHour
+    HWR_R_POWER_Waschmaschine_Verbrauch : strategy = everyChange, everyHour
+    HWR_R_POWER_Waschmaschine_Stronverbrauch : strategy = everyChange, everyHour
     HWR_R_DOOR_userId : strategy = everyChange, everyHour
     HWR_R_DOOR_action : strategy = everyChange, everyHour
     HWR_R_DOOR_fingerId : strategy = everyChange, everyHour
@@ -59,4 +62,7 @@ Items {
     TKR_R_SENSOR_IDM_Betriebsart_WMP : strategy = everyChange, everyHour
     TKR_RW_SENSOR_IDM_Betriebsart_HZK_B : strategy = everyChange, everyHour
     TKR_R_SENSOR_IDM_Elektrische_Gesamtleistung : strategy = everyChange, everyHour
+    HWR_R_WASHINGMASCHINE_Status : strategy = everyChange, everyHour
+    TKR_R_PV_AC_Leistung : strategy = everyChange, everyHour
+    TKR_R_PV_Status_Wechselrichter : strategy = everyChange, everyHour
 }

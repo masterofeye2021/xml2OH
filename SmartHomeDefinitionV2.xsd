@@ -34,12 +34,22 @@
 						<xs:sequence>
 							<xs:element ref="area.map"/>
 							<xs:element ref="idm.map" maxOccurs="unbounded"/>
+							<xs:element name="information.definition" type="notification.definition"/>
 						</xs:sequence>
 					</xs:complexType>
 				</xs:element>
 				<xs:element ref="alexa.configuration"/>
+				<xs:element ref="huawei.configuration"/>
 			</xs:all>
 		</xs:complexType>
+		<xs:key name="notificationKey">
+			<xs:selector xpath="definition/information.definition/notificiation"/>
+			<xs:field xpath="@id"/>
+		</xs:key>
+		<xs:keyref name="channelnotification" refer="notificationKey">
+			<xs:selector xpath="devices/device/channel/notification"/>
+			<xs:field xpath="@notification.type"/>
+		</xs:keyref>
 	</xs:element>
 	<xs:complexType name="devices">
 		<xs:sequence>
@@ -102,6 +112,8 @@
 			<xs:enumeration value="POWER"/>
 			<xs:enumeration value="DOOR"/>
 			<xs:enumeration value="ALEXA"/>
+			<xs:enumeration value="WASHINGMASCHINE"/>
+			<xs:enumeration value="PV"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="unit">
@@ -168,10 +180,17 @@
 			</xs:element>
 			<xs:element name="mapref" minOccurs="0">
 				<xs:complexType>
-					<xs:attribute name="refid2" type="xs:IDREF"/>
+					<xs:attribute name="refmap" type="xs:IDREF"/>
+				</xs:complexType>
+			</xs:element>
+			<xs:element name="notification" minOccurs="0">
+				<xs:complexType>
+					<xs:attribute name="notification.type" type="xs:string" use="required"/>
+					<xs:attribute name="content" use="required"/>
 				</xs:complexType>
 			</xs:element>
 		</xs:all>
+		<xs:attribute name="tag"/>
 		<xs:attribute name="format" type="format" use="required"/>
 		<xs:attribute name="unit" type="unit" use="required"/>
 		<xs:attribute name="access" type="access" use="required"/>
@@ -250,6 +269,7 @@
 			<xs:enumeration value="fa-plug"/>
 			<xs:enumeration value="fa-utility-pole"/>
 			<xs:enumeration value="fa-circle-exclamation"/>
+			<xs:enumeration value="fa-battery-bolt"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="comm">
@@ -262,6 +282,7 @@
 			<xs:enumeration value="EKEY"/>
 			<xs:enumeration value="HTTP"/>
 			<xs:enumeration value="ALEXA"/>
+			<xs:enumeration value="OPENHAB"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:complexType name="knx">
@@ -318,26 +339,33 @@
 			<xs:element name="poller">
 				<xs:complexType>
 					<xs:all>
-						<xs:element name="address" type="xs:int"/>
-						<xs:element name="length" type="xs:short"/>
-						<xs:element name="type" type="modbus.type" default="holding"/>
+						<xs:element name="thing" type="modbus.thing"/>
 					</xs:all>
+					<xs:attribute name="address" type="xs:short" use="required"/>
+					<xs:attribute name="length" type="xs:short" use="required"/>
+					<xs:attribute name="type" use="required">
+						<xs:simpleType>
+							<xs:restriction base="xs:anyURI">
+								<xs:enumeration value="coil"/>
+								<xs:enumeration value="discrete"/>
+								<xs:enumeration value="holding"/>
+								<xs:enumeration value="input"/>
+							</xs:restriction>
+						</xs:simpleType>
+					</xs:attribute>
+					<xs:attribute name="refresh" type="xs:short" use="required"/>
+					<xs:attribute name="maxTries" type="xs:short" use="required"/>
+					<xs:attribute name="cacheMillis" type="xs:short" default="0"/>
 				</xs:complexType>
 			</xs:element>
-			<xs:element name="address" type="xs:int"/>
-			<xs:element name="read.value" type="modbus.read.value"/>
 		</xs:all>
 	</xs:complexType>
 	<xs:simpleType name="modbus.type">
 		<xs:restriction base="xs:anyURI">
 			<xs:enumeration value="holding"/>
-		</xs:restriction>
-	</xs:simpleType>
-	<xs:simpleType name="modbus.read.value">
-		<xs:restriction base="xs:anyURI">
-			<xs:enumeration value="uint16"/>
-			<xs:enumeration value="int32"/>
-			<xs:enumeration value="uint32"/>
+			<xs:enumeration value="coil"/>
+			<xs:enumeration value="discrete"/>
+			<xs:enumeration value="input"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:complexType name="group">
@@ -498,6 +526,9 @@
 			<xs:enumeration value="TimeKNX"/>
 			<xs:enumeration value="IDMKNX"/>
 			<xs:enumeration value="Alexa"/>
+			<xs:enumeration value="Openhab"/>
+			<xs:enumeration value="Washer"/>
+			<xs:enumeration value="Huawei.Modbus"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:element name="ntp.configuration">
@@ -593,6 +624,22 @@
 			</xs:all>
 		</xs:complexType>
 	</xs:element>
+	<xs:element name="huawei.configuration">
+		<xs:complexType>
+			<xs:all>
+				<xs:element name="bridge">
+					<xs:complexType>
+						<xs:attribute name="ip" type="xs:string" use="required"/>
+						<xs:attribute name="port" type="xs:short" use="optional" default="502"/>
+						<xs:attribute name="id" type="xs:short" use="optional" default="1"/>
+						<xs:attribute name="rtu.encoding" type="xs:boolean" default="false"/>
+						<xs:attribute name="time.between.transactions" type="xs:short" use="optional" default="1500"/>
+						<xs:attribute name="max.reconnect" type="xs:short" use="optional" default="3"/>
+					</xs:complexType>
+				</xs:element>
+			</xs:all>
+		</xs:complexType>
+	</xs:element>
 	<xs:element name="area.map">
 		<xs:complexType>
 			<xs:sequence>
@@ -660,6 +707,53 @@
 			<xs:enumeration value="flashbriefingprofile"/>
 			<xs:enumeration value="smartHomeDevice"/>
 			<xs:enumeration value="smartHomeDeviceGroup"/>
+		</xs:restriction>
+	</xs:simpleType>
+	<xs:complexType name="alarm"/>
+	<xs:complexType name="notification.definition">
+		<xs:sequence maxOccurs="4">
+			<xs:element name="notificiation" type="notification" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="notification">
+		<xs:attribute name="id" type="xs:string" use="required"/>
+	</xs:complexType>
+	<xs:complexType name="modbus.thing">
+		<xs:attribute name="readValueType" type="modbus.read.value.type" use="optional"/>
+		<xs:attribute name="readStart" type="xs:short" use="optional"/>
+		<xs:attribute name="readTransform" type="xs:string" use="optional"/>
+		<xs:attribute name="writeValueType" type="modbus.read.value.type" use="optional"/>
+		<xs:attribute name="writeStart" type="xs:short" use="optional"/>
+		<xs:attribute name="writeType" use="optional">
+			<xs:simpleType>
+				<xs:restriction base="xs:anyURI">
+					<xs:enumeration value="coil"/>
+					<xs:enumeration value="holding"/>
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:attribute>
+		<xs:attribute name="writeTransform" type="xs:string"/>
+		<xs:attribute name="writeMultipleEvenWithSingleRegisterOrCoil" type="xs:boolean" default="false"/>
+		<xs:attribute name="writeMaxTries" type="xs:short" default="3"/>
+		<xs:attribute name="updateUnchangedValuesEveryMillis" type="xs:short" default="1000"/>
+	</xs:complexType>
+	<xs:simpleType name="modbus.read.value.type">
+		<xs:restriction base="xs:anyURI">
+			<xs:enumeration value="int64"/>
+			<xs:enumeration value="int64_swap"/>
+			<xs:enumeration value="uint64"/>
+			<xs:enumeration value="uint64_swap"/>
+			<xs:enumeration value="float32"/>
+			<xs:enumeration value="float32_swap"/>
+			<xs:enumeration value="int32"/>
+			<xs:enumeration value="int32_swap"/>
+			<xs:enumeration value="uint32"/>
+			<xs:enumeration value="uint32_swap"/>
+			<xs:enumeration value="int16"/>
+			<xs:enumeration value="uint16"/>
+			<xs:enumeration value="int8"/>
+			<xs:enumeration value="uint8"/>
+			<xs:enumeration value="bit"/>
 		</xs:restriction>
 	</xs:simpleType>
 </xs:schema>

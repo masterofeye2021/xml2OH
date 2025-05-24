@@ -2,6 +2,7 @@ import xml.etree.ElementTree as ET
 import os
 from xsdata.formats.dataclass.parsers import XmlParser
 from xsdata.formats.dataclass.serializers import XmlSerializer
+from FileGenerators.OpenhabAlexaThingGenerator import OpenhabAlexaThingGenerator
 from smarthome import Openhab
 from smarthome.smart_home_definition_v2 import Comm, Device
 from FileGenerators.OpenhabDoorThingFileGenerator import OpenhabDoorThingFileGenerator
@@ -11,6 +12,8 @@ from FileGenerators.OpenhabItemFileGenerator import OpenhabItemFileGenerator
 from FileGenerators.OpenhabICALThingFileGenerator import OpenhabICALThingFileGenerator
 from FileGenerators.OpenhabKNXThingFileGenerator import OpenhabKNXThingFileGenerator
 from FileGenerators.OpenhabPersistensInfluxDBGenerator import OpenhabPersistensInfluxDBGenerator
+from FileGenerators.OpenhabHuaweiPVThingGenerator import OpenhabHuaweiPVThingGenerator
+from FileGenerators.OpenhabGroupItems import OpenhabGroupItems
 
 # Initialize file generators with the current directory path
 def initialize_generators(base_path):
@@ -20,7 +23,10 @@ def initialize_generators(base_path):
         "ical": OpenhabICALThingFileGenerator(base_path),
         "ntp": OpenhabNTPThingFileGenerator(base_path),
         "ekey": OpenhabEKEYThingFileGenerator(base_path),
-        "door": OpenhabDoorThingFileGenerator(base_path)
+        "door": OpenhabDoorThingFileGenerator(base_path),
+        "alexa": OpenhabAlexaThingGenerator(base_path),
+        "huawei_pv": OpenhabHuaweiPVThingGenerator(base_path),
+        "group": OpenhabGroupItems(base_path)
     }
 
 # Parse the SmartHome configuration XML file
@@ -34,7 +40,7 @@ def filter_devices(devices, com_type):
 
 # Write item files for each communication type
 def write_item_files(generators, openhab):
-    comm_types = ["KNX", "ICAL", "NTP", "EKEY", "HTTP"]
+    comm_types = ["KNX", "ICAL", "NTP", "EKEY", "HTTP", "ALEXA", "OPENHAB", "MODBUS"]
     for comm in comm_types:
         devices = filter_devices(openhab.devices.device, getattr(Comm, comm))
         generators["item"].writeFile(devices, openhab.groups.group, f"{comm.lower()}.items")
@@ -46,6 +52,9 @@ def write_thing_files(generators, openhab):
     generators["ntp"].writeThing(openhab.ntp_configuration, openhab.devices.device)
     generators["ekey"].writeThing(openhab.ekey_configuration, openhab.devices.device)
     generators["door"].writeThing(openhab.door_configuration, openhab.devices.device)
+    generators["alexa"].writeBridge(openhab.alexa_configuration, openhab.devices.device)
+    generators["huawei_pv"].writeBridge(openhab.huawei_configuration, openhab.devices.device)
+    generators["group"].write_group(openhab)
 
 # Serialize and save the modified XML content
 def save_modified_xml(openhab, file_path):
@@ -58,6 +67,8 @@ def save_modified_xml(openhab, file_path):
     with open(file_path, "w", encoding="utf-8") as file:
         file.write(new_xml_content)
 
+
+
 # Main function to generate OpenHAB configuration files
 def main(): 
     base_path = os.path.dirname(__file__)
@@ -66,6 +77,7 @@ def main():
     
     write_item_files(generators, openhab)
     write_thing_files(generators, openhab)
+
 
     save_modified_xml(openhab, "SmartHomeConfiguration.xml")
 

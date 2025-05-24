@@ -421,6 +421,7 @@ Bridge knx:ip:bridge [
 			Type number		 : HWR_R_POWER_Waschmaschine_Strom		 "Strom"		 [ga="<10/6/12"]
 			Type number		 : HWR_R_POWER_Waschmaschine_Verbrauch		 "Verbrauch"		 [ga="13.010:<10/6/13"]
 			Type switch		 : HWR_W_POWER_Waschmaschine_Reset_Verbrauch		 "Reset Verbrauch"		 [ga="10/6/14"]
+			Type number		 : HWR_R_POWER_Waschmaschine_Stronverbrauch		 "Stronverbrauch"		 [ga="7.012:<10/6/12"]
 			Type switch		 : HWR_W_POWER_Trockner_Schalten		 "Schalten"		 [ga="<10/6/20"]
 			Type contact		 : HWR_R_POWER_Trockner_Status		 "Status"		 [ga="<10/6/21"]
 			Type switch		 : HWR_W_POWER_Trockner_Sperren		 "Sperren"		 [ga="10/6/22"]

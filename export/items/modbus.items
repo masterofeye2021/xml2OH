@@ -1,0 +1,4 @@
+
+
+Number  TKR_R_PV_AC_Leistung "Active Power [%.0f kW]"  <fa-lightbulb> (TKR) {channel="modbus:data:huaweipv:32080:TKR_AC_Leistung:number", smartux="" [location="TKR",unit="kW"]}
+Number  TKR_R_PV_Status_Wechselrichter "Status Wechselrichter [%.0f]"  <fa-lock> (TKR) {channel="modbus:data:huaweipv:32000:TKR_Status_Wechselrichter:number", smartux="" [location="TKR"]}
