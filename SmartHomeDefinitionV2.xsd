@@ -114,6 +114,8 @@
 			<xs:enumeration value="ALEXA"/>
 			<xs:enumeration value="WASHINGMASCHINE"/>
 			<xs:enumeration value="PV"/>
+			<xs:enumeration value="IRRIGATION"/>
+			<xs:enumeration value="CISTERNLEVEL"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="unit">
@@ -341,7 +343,8 @@
 					<xs:all>
 						<xs:element name="thing" type="modbus.thing"/>
 					</xs:all>
-					<xs:attribute name="address" type="xs:short" use="required"/>
+					<xs:attribute name="name" type="xs:string" use="required"/>
+					<xs:attribute name="address" type="xs:int" use="required"/>
 					<xs:attribute name="length" type="xs:short" use="required"/>
 					<xs:attribute name="type" use="required">
 						<xs:simpleType>
@@ -353,7 +356,7 @@
 							</xs:restriction>
 						</xs:simpleType>
 					</xs:attribute>
-					<xs:attribute name="refresh" type="xs:short" use="required"/>
+					<xs:attribute name="refresh" type="xs:int" use="required"/>
 					<xs:attribute name="maxTries" type="xs:short" use="required"/>
 					<xs:attribute name="cacheMillis" type="xs:short" default="0"/>
 				</xs:complexType>
@@ -529,6 +532,8 @@
 			<xs:enumeration value="Openhab"/>
 			<xs:enumeration value="Washer"/>
 			<xs:enumeration value="Huawei.Modbus"/>
+			<xs:enumeration value="IrrigationKNX"/>
+			<xs:enumeration value="CisternLevelKNX"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:element name="ntp.configuration">
@@ -720,7 +725,7 @@
 	</xs:complexType>
 	<xs:complexType name="modbus.thing">
 		<xs:attribute name="readValueType" type="modbus.read.value.type" use="optional"/>
-		<xs:attribute name="readStart" type="xs:short" use="optional"/>
+		<xs:attribute name="readStart" type="xs:int" use="optional"/>
 		<xs:attribute name="readTransform" type="xs:string" use="optional"/>
 		<xs:attribute name="writeValueType" type="modbus.read.value.type" use="optional"/>
 		<xs:attribute name="writeStart" type="xs:short" use="optional"/>

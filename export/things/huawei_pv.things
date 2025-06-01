@@ -6,23 +6,143 @@ Bridge modbus:tcp:huaweipv [
 	timeBetweenTransactionsMillis=1500,
 	connectMaxTries=3
 	] {
-		Bridge poller 32080 [
-		start=32080,
-		length=2,
-		type="holding",
-		refresh=1000,
-		maxTries=3,
-		cacheMillis=0
-		] {
-			Thing data TKR_AC_Leistung [ readValueType="int32",readStart=32080,writeMultipleEvenWithSingleRegisterOrCoil=false,writeMaxTries=3,updateUnchangedValuesEveryMillis=1000]
-		}Bridge poller 32000 [
-		start=32000,
-		length=1,
-		type="holding",
-		refresh=10000,
-		maxTries=3,
-		cacheMillis=0
-		] {
-			Thing data TKR_Status_Wechselrichter [ readValueType="uint16",readStart=32000,writeMultipleEvenWithSingleRegisterOrCoil=false,writeMaxTries=3,updateUnchangedValuesEveryMillis=1000]
+		Bridge poller 32000 "Poller Status Wechselrichter" [
+			start=32000,
+			length=1,
+			type="holding",
+			refresh=60000,
+			maxTries=3,
+			cacheMillis=0]
+		{
+			Thing data TKR_Status_Wechselrichter "Data Status Wechselrichter" [ readValueType="uint16",readStart=32000,writeMultipleEvenWithSingleRegisterOrCoil=false,writeMaxTries=1,updateUnchangedValuesEveryMillis=1000]
+
 		}
+
+		Bridge poller 32008 "Poller Alarm" [
+			start=32008,
+			length=3,
+			type="holding",
+			refresh=60000,
+			maxTries=3,
+			cacheMillis=0]
+		{
+			Thing data TKR_Alarm1 "Data Alarm" [ readValueType="uint16",readStart=32008,writeMultipleEvenWithSingleRegisterOrCoil=false,writeMaxTries=3,updateUnchangedValuesEveryMillis=1000]
+			Thing data TKR_Alarm2 "Data Alarm" [ readValueType="uint16",readStart=32009,writeMultipleEvenWithSingleRegisterOrCoil=false,writeMaxTries=3,updateUnchangedValuesEveryMillis=1000]
+			Thing data TKR_Alarm3 "Data Alarm" [ readValueType="uint16",readStart=32010,writeMultipleEvenWithSingleRegisterOrCoil=false,writeMaxTries=3,updateUnchangedValuesEveryMillis=1000]
+
+		}
+
+		Bridge poller 32064 "Poller AC Eingangsleistung" [
+			start=32064,
+			length=2,
+			type="holding",
+			refresh=1000,
+			maxTries=3,
+			cacheMillis=100]
+		{
+			Thing data TKR_AC_Eingangsleistung "Data AC Eingangsleistung" [ readValueType="int32",readStart=32064,writeMultipleEvenWithSingleRegisterOrCoil=false,writeMaxTries=3,updateUnchangedValuesEveryMillis=1000]
+
+		}
+
+		Bridge poller 32078 "Poller Spitzenleistung" [
+			start=32078,
+			length=2,
+			type="holding",
+			refresh=300000,
+			maxTries=3,
+			cacheMillis=1000]
+		{
+			Thing data TKR_Peak_active_power_of_current_day "Data Spitzenleistung" [ readValueType="int32",readStart=32078,writeMultipleEvenWithSingleRegisterOrCoil=false,writeMaxTries=3,updateUnchangedValuesEveryMillis=1000]
+
+		}
+
+		Bridge poller 32080 "Poller Aktuelle AC Leistung" [
+			start=32080,
+			length=4,
+			type="holding",
+			refresh=1000,
+			maxTries=3,
+			cacheMillis=1000]
+		{
+			Thing data TKR_AC_Leistung "Data AC Leistung" [ readValueType="int32",readStart=32080,writeMultipleEvenWithSingleRegisterOrCoil=false,writeMaxTries=1,updateUnchangedValuesEveryMillis=1000]
+			Thing data TKR_Active_power "Data Aktuelle AC Leistung" [ readValueType="int32",readStart=32080,writeMultipleEvenWithSingleRegisterOrCoil=false,writeMaxTries=3,updateUnchangedValuesEveryMillis=1000]
+
+		}
+
+		Bridge poller 32087 "Poller Wechselrichtertemperatur" [
+			start=32087,
+			length=1,
+			type="holding",
+			refresh=300000,
+			maxTries=3,
+			cacheMillis=1000]
+		{
+			Thing data TKR_Internal_temperature "Data Wechselrichtertemperatur" [ readValueType="int16",readStart=32087,writeMultipleEvenWithSingleRegisterOrCoil=false,writeMaxTries=3,updateUnchangedValuesEveryMillis=1000]
+
+		}
+
+		Bridge poller 32089 "Poller Gerätestatus" [
+			start=32089,
+			length=1,
+			type="holding",
+			refresh=300000,
+			maxTries=3,
+			cacheMillis=1000]
+		{
+			Thing data TKR_Device_status "Data Gerätestatus" [ readValueType="uint16",readStart=32089,writeMultipleEvenWithSingleRegisterOrCoil=false,writeMaxTries=3,updateUnchangedValuesEveryMillis=1000]
+
+		}
+
+		Bridge poller 32106 "Poller PV Energie ingesamt" [
+			start=32106,
+			length=2,
+			type="holding",
+			refresh=1000000,
+			maxTries=3,
+			cacheMillis=0]
+		{
+			Thing data TKR_Totel_Energy_Yield "Data PV Energie ingesamt" [ readValueType="uint32",readStart=32106,writeMultipleEvenWithSingleRegisterOrCoil=false,writeMaxTries=3,updateUnchangedValuesEveryMillis=1000]
+
+		}
+
+		Bridge poller 32114 "Poller PV Energie am Tag" [
+			start=32114,
+			length=2,
+			type="holding",
+			refresh=300000,
+			maxTries=3,
+			cacheMillis=0]
+		{
+			Thing data TKR_Daily_Energy_Yield "Data PV Energie am Tag" [ readValueType="uint32",readStart=32114,writeMultipleEvenWithSingleRegisterOrCoil=false,writeMaxTries=3,updateUnchangedValuesEveryMillis=1000]
+
+		}
+
+		Bridge poller 37113 "Poller Stromverbrauch" [
+			start=37113,
+			length=4,
+			type="holding",
+			refresh=1000,
+			maxTries=3,
+			cacheMillis=1000]
+		{
+			Thing data TKR_Active_Power_Consumption "Data Stromverbrauch" [ readValueType="int32",readStart=37113,writeMultipleEvenWithSingleRegisterOrCoil=false,writeMaxTries=3,updateUnchangedValuesEveryMillis=1000]
+			Thing data TKR_Active_Power_Consumption "Data Stromverbrauch" [ readValueType="int32",readStart=37113,writeMultipleEvenWithSingleRegisterOrCoil=false,writeMaxTries=3,updateUnchangedValuesEveryMillis=1000]
+
+		}
+
+		Bridge poller 37119 "Poller Gesamte importierte Energie" [
+			start=37119,
+			length=4,
+			type="holding",
+			refresh=300000,
+			maxTries=3,
+			cacheMillis=1000]
+		{
+			Thing data TKR_Positive_active_electricity "Data Gesamtexportierte Energie " [ readValueType="int32",readStart=37119,writeMultipleEvenWithSingleRegisterOrCoil=false,writeMaxTries=3,updateUnchangedValuesEveryMillis=1000]
+			Thing data TKR_Reverse_active_power "Data Gesamte importierte Energie" [ readValueType="int32",readStart=37121,writeMultipleEvenWithSingleRegisterOrCoil=false,writeMaxTries=3,updateUnchangedValuesEveryMillis=1000]
+
+		}
+
+		
 	}
+	

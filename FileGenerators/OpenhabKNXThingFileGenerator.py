@@ -81,6 +81,7 @@ class OpenhabKNXThingFileGenerator(OpenhabFileGenerator):
                     if channel.enable == True and channel.connection.knx :
                         self.writeChannelType(channel.type_value.value)
                         self.writeChannelName(device,channel)
+                        self.file.write("\t\t\t")
                         self.writeChannelLabel(device,channel)
                         self.writeGroupAddress(channel)
                         self.file.write("\n\t\t\t")

@@ -2,3 +2,17 @@
 
 Number  TKR_R_PV_AC_Leistung "Active Power [%.0f kW]"  <fa-lightbulb> (TKR) {channel="modbus:data:huaweipv:32080:TKR_AC_Leistung:number", smartux="" [location="TKR",unit="kW"]}
 Number  TKR_R_PV_Status_Wechselrichter "Status Wechselrichter [%.0f]"  <fa-lock> (TKR) {channel="modbus:data:huaweipv:32000:TKR_Status_Wechselrichter:number", smartux="" [location="TKR"]}
+Number  TKR_R_PV_Alarm1 "Alarm1 [%.0f]"  <fa-lock> (TKR) {channel="modbus:data:huaweipv:32008:TKR_Alarm1:number", smartux="" [location="TKR", alarm="Error", alarmText="Der Wechselrichter ist auf einen Fehler gelaufen."]}
+Number  TKR_R_PV_Alarm2 "Alarm2 [%.0f]"  <fa-lock> (TKR) {channel="modbus:data:huaweipv:32008:TKR_Alarm2:number", smartux="" [location="TKR", alarm="Error", alarmText="Der Wechselrichter ist auf einen Fehler gelaufen."]}
+Number  TKR_R_PV_Alarm3 "Alarm3 [%.0f]"  <fa-lock> (TKR) {channel="modbus:data:huaweipv:32008:TKR_Alarm3:number", smartux="" [location="TKR", alarm="Error", alarmText="Der Wechselrichter ist auf einen Fehler gelaufen."]}
+Number  TKR_R_PV_AC_Eingangsleistung "AC Eingangsleistung [%.0f kW]"  <fa-lock> (TKR) {channel="modbus:data:huaweipv:32064:TKR_AC_Eingangsleistung:number", smartux="" [location="TKR",unit="kW"]}
+Number  TKR_R_PV_Peak_active_power_of_current_day "Maximale Spitzenleistung 24h [%.0f kW]"  <fa-lock> (TKR) {channel="modbus:data:huaweipv:32078:TKR_Peak_active_power_of_current_day:number", smartux="" [location="TKR",unit="kW"]}
+Number  TKR_R_PV_Active_power "Aktuelle AC Leistung [%.0f kW]"  <fa-lock> (TKR) {channel="modbus:data:huaweipv:32080:TKR_Active_power:number", smartux="" [location="TKR",unit="kW"]}
+Number  TKR_R_PV_Internal_temperature "Wechselrichtertemperator [%.0f °C]"  <fa-temperature-three-quarters> (TKR) {channel="modbus:data:huaweipv:32087:TKR_Internal_temperature:number", smartux="" [location="TKR",unit="°C"]}
+Number  TKR_R_PV_Device_status "Gerätestatus [%.0f]"  <fa-lock> (TKR) {channel="modbus:data:huaweipv:32089:TKR_Device_status:number", smartux="" [location="TKR"]}
+Number  TKR_R_PV_Totel_Energy_Yield "PV Energie ingesamt [%.0f kWh]"  <fa-lock> (TKR) {channel="modbus:data:huaweipv:32106:TKR_Totel_Energy_Yield:number", smartux="" [location="TKR",unit="kWh"]}
+Number  TKR_R_PV_Daily_Energy_Yield "PV Energie Heute [%.0f kWh]"  <fa-lock> (TKR) {channel="modbus:data:huaweipv:32114:TKR_Daily_Energy_Yield:number", smartux="" [location="TKR",unit="kWh"]}
+Number  TKR_R_PV_Active_Power_Consumption "Stromverbrauch [%.2f W]"  <fa-lock> (TKR) {channel="modbus:data:huaweipv:37113:TKR_Active_Power_Consumption:number", smartux="" [location="TKR",unit="W"]}
+Number  TKR_R_PV_Active_Power_Consumption "Stromverbrauch [%.2f W]"  <fa-lock> (TKR) {channel="modbus:data:huaweipv:37113:TKR_Active_Power_Consumption:number", smartux="" [location="TKR",unit="W"]}
+Number  TKR_R_PV_Positive_active_electricity "Gesamtexportierte Energie  [%.0f kWh]"  <fa-lock> (TKR) {channel="modbus:data:huaweipv:37119:TKR_Positive_active_electricity:number", smartux="" [location="TKR",unit="kWh"]}
+Number  TKR_R_PV_Reverse_active_power "Gesamte importierte Energie [%.0f kWh]"  <fa-lock> (TKR) {channel="modbus:data:huaweipv:37119:TKR_Reverse_active_power:number", smartux="" [location="TKR",unit="kWh"]}

@@ -94,6 +94,8 @@ class DeviceSpecification(Enum):
     OPENHAB = "Openhab"
     WASHER = "Washer"
     HUAWEI_MODBUS = "Huawei.Modbus"
+    IRRIGATION_KNX = "IrrigationKNX"
+    CISTERN_LEVEL_KNX = "CisternLevelKNX"
 
 
 class Format(Enum):
@@ -118,6 +120,8 @@ class Function(Enum):
     ALEXA = "ALEXA"
     WASHINGMASCHINE = "WASHINGMASCHINE"
     PV = "PV"
+    IRRIGATION = "IRRIGATION"
+    CISTERNLEVEL = "CISTERNLEVEL"
 
 
 class GroupFunction(Enum):
@@ -1355,6 +1359,13 @@ class Modbus:
             default=None,
             metadata={
                 "type": "Element",
+                "required": True,
+            },
+        )
+        name: Optional[str] = field(
+            default=None,
+            metadata={
+                "type": "Attribute",
                 "required": True,
             },
         )
