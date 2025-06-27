@@ -81,6 +81,8 @@ class OpenhabItemFileGenerator(OpenhabFileGenerator):
                 self.writeKNXDateTimeBindingConfiguration(name,device, channel) 
             elif channel.connection.knx:
                 self.writeKNXBindingConfiguration(name,device, channel) 
+        elif channel.connection.internal:
+             self.writeInternalConfiguration(name,device, channel)  
         elif device.device_comm_type == Comm.ICAL:
             self.writeICALBindingConfiguration(name,device, channel)
         elif device.device_comm_type == Comm.NTP:
@@ -93,7 +95,7 @@ class OpenhabItemFileGenerator(OpenhabFileGenerator):
              self.writeAlexaBindingConfiguration(name,device, channel)
         elif device.device_comm_type == Comm.OPENHAB:
              self.writeOpenhabConfiguration(name,device, channel)  
-        elif device.device_comm_type == Comm.MODBUS or device.device_specification == DeviceSpecification.HUAWEI_MODBUS:
+        elif channel.connection.modbus:
              self.writeHuaweiPVBindingConfiguration(name,device, channel)
         self.file.write("\n")
 
@@ -146,6 +148,9 @@ class OpenhabItemFileGenerator(OpenhabFileGenerator):
         
         self.file.write(startDelimiter)
         groupString = ""
+        if channel.groups is None or len(channel.groups.group_ref) == 0:
+            raise ValueError("Channel groups are not defined or empty for channel: " + channel.name)
+
         for group in channel.groups.group_ref:
             matches = [x for x in groups if x.id == group.refid]
             if len(matches) > 0:
@@ -266,6 +271,8 @@ class OpenhabItemFileGenerator(OpenhabFileGenerator):
 
 
         self.file.write("channel=\"modbus:data:huaweipv:" + str(channel.connection.modbus.poller.address) + ":" + name + ":number"+ "\"")
+        if channel.connection.modbus.poller.gain_offset:
+            self.file.write("[ profile=\"modbus:gainOffset\", gain=\"" + str(channel.connection.modbus.poller.gain_offset) + "\", pre-gain-offset=\"0\" ]")
         self.file.write(", ")
         self.writeMetaData(device, channel)
         self.file.write(stopDel)
@@ -277,3 +284,10 @@ class OpenhabItemFileGenerator(OpenhabFileGenerator):
         self.file.write(startDel)
         self.writeMetaData(device, channel)
         self.file.write(stopDel)
+
+    def writeInternalConfiguration(self,name :str,device : Device, channel : Channel):
+        startDel = "{"
+        stopDel = "}"
+        self.file.write(startDel)
+        self.writeMetaData(device, channel)
+        self.file.write(stopDel)      

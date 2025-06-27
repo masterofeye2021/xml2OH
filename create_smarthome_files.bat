@@ -1,1 +1,1 @@
-xsdata .\SmartHomeDefinitionV2.xsd --package smarthome
+python -m xsdata .\SmartHomeDefinitionV2.xsd --package smarthome

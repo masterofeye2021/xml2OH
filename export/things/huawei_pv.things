@@ -119,13 +119,12 @@ Bridge modbus:tcp:huaweipv [
 
 		Bridge poller 37113 "Poller Stromverbrauch" [
 			start=37113,
-			length=4,
+			length=2,
 			type="holding",
 			refresh=1000,
 			maxTries=3,
 			cacheMillis=1000]
 		{
-			Thing data TKR_Active_Power_Consumption "Data Stromverbrauch" [ readValueType="int32",readStart=37113,writeMultipleEvenWithSingleRegisterOrCoil=false,writeMaxTries=3,updateUnchangedValuesEveryMillis=1000]
 			Thing data TKR_Active_Power_Consumption "Data Stromverbrauch" [ readValueType="int32",readStart=37113,writeMultipleEvenWithSingleRegisterOrCoil=false,writeMaxTries=3,updateUnchangedValuesEveryMillis=1000]
 
 		}

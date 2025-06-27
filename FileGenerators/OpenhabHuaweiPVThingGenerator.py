@@ -55,7 +55,8 @@ class OpenhabHuaweiPVThingGenerator(OpenhabFileGenerator):
             if device.device_comm_type == Comm.MODBUS:
                 # Group channels by poller address
                 channels_by_address = {}
-                for channel in sorted(device.channel, key=lambda ch: ch.connection.modbus.poller.address):
+                for channel in sorted([ch for ch in device.channel if hasattr(ch.connection, "modbus") and ch.connection.modbus is not None],
+                    key=lambda ch: ch.connection.modbus.poller.address):
                     address = channel.connection.modbus.poller.address
                     if address not in channels_by_address:
                         channels_by_address[address] = []

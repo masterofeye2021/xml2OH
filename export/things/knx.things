@@ -503,8 +503,8 @@ Bridge knx:ip:bridge [
 			Type switch		 : GAR_RW_IRRIGATION_Magnetventil_4_Schalten					 "Magnetventil 4 Schalten"		 [ga="1.001:2/6/25"]
 			Type contact		 : GAR_R_IRRIGATION_Magnetventil_4_Schalten_Status					 "Magnetventil 4 Schalten Status"		 [ga="1.011:<2/6/26"]
 			Type contact		 : GAR_R_CISTERNLEVEL_Bit0					 "Bit0"		 [ga="1.011:<2/6/20"]
-			Type contact		 : GAR_R_CISTERNLEVEL_Bit1					 "Bit1"		 [ga="1.011:<2/6/21"]
-			Type contact		 : GAR_R_CISTERNLEVEL_Bit3					 "Bit3"		 [ga="1.011:<2/6/22"]
-			Type contact		 : GAR_R_CISTERNLEVEL_Bit4					 "Bit4"		 [ga="1.011:<2/6/23"]
+			Type contact		 : GAR_R_CISTERNLEVEL_Bit1					 "Bit1"		 [ga="1.011:<2/5/21"]
+			Type contact		 : GAR_R_CISTERNLEVEL_Bit2					 "Bit2"		 [ga="1.011:<2/5/22"]
+			Type contact		 : GAR_R_CISTERNLEVEL_Bit3					 "Bit3"		 [ga="1.011:<2/5/23"]
 			
 		}}

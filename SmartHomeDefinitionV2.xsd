@@ -191,6 +191,7 @@
 					<xs:attribute name="content" use="required"/>
 				</xs:complexType>
 			</xs:element>
+			<xs:element name="transformation" type="xs:string" minOccurs="0"/>
 		</xs:all>
 		<xs:attribute name="tag"/>
 		<xs:attribute name="format" type="format" use="required"/>
@@ -359,6 +360,8 @@
 					<xs:attribute name="refresh" type="xs:int" use="required"/>
 					<xs:attribute name="maxTries" type="xs:short" use="required"/>
 					<xs:attribute name="cacheMillis" type="xs:short" default="0"/>
+					<xs:attribute name="gain.offset" type="xs:string" use="optional"/>
+					<xs:attribute name="pre.gainoffset" type="xs:short" use="optional"/>
 				</xs:complexType>
 			</xs:element>
 		</xs:all>
